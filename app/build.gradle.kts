@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.sehatsehat"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -38,6 +38,7 @@ android {
     }
     buildFeatures {
         compose = true
+        dataBinding = true
     }
 }
 
@@ -75,6 +76,6 @@ dependencies {
     kapt("com.squareup.moshi:moshi-kotlin-codegen:1.15.2")
 
     implementation("androidx.compose.material3:material3:1.3.2")
-
-    implementation("com.github.AnyChart:AnyChart-Android:1.1.5")
+    implementation ("co.yml:ycharts:2.1.0")
+//    implementation("com.github.ehsannarmani:compose-charts:latest_version")
 }
