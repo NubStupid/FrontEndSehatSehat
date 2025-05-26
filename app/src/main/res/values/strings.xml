@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">SehatSehat</string>
     <string name="title_activity_admin_homepage">AdminHomepageActivity</string>
+    <string name="title_activity_chatbot">ChatbotActivity</string>
 </resources>
