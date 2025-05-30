@@ -18,5 +18,10 @@ interface ChatLogDao {
     suspend fun getChatFromGroup(group_id:String):List<ChatLogEntity>
     @Query("SELECT * from chat_log where chat_group_id =:username+'_Chatbot'")
     suspend fun getChatFromBot(username:String):List<ChatLogEntity>
-
+    @Query("SELECT * from chat_log where id =:id")
+    suspend fun getChatFromId(id:String):ChatLogEntity?
+    @Query("SELECT * from chat_log")
+    suspend fun getAll():List<ChatLogEntity>
+    @Query("SELECT COUNT(*) from chat_log")
+    suspend fun getSize():Int
 }
