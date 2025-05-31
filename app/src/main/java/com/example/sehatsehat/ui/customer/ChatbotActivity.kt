@@ -4,8 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.animation.core.copy
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +28,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,16 +40,17 @@ import androidx.compose.ui.semantics.text
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
+import com.example.sehatsehat.SehatViewModelFactory
 import com.example.sehatsehat.data.sources.local.ChatLogEntity
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.UUID
 import kotlin.text.format
 import kotlin.text.isNotBlank
-
+import androidx.compose.runtime.livedata.observeAsState
 
 class ChatbotActivity : ComponentActivity() {
-    val activeUser = "UserA"
+    val vm by viewModels<ChatbotViewModel>(){SehatViewModelFactory}
     val dummyChatLogsList: List<ChatLogEntity> = listOf(
         ChatLogEntity(
             id = UUID.randomUUID().toString(),
@@ -101,21 +105,26 @@ class ChatbotActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        vm.init("john_doe", "CG00001")
         enableEdgeToEdge()
         setContent {
-            ChatScreen(messages = dummyChatLogsList) {}
+            ChatScreen(messages = vm.chatMessages.value ?: emptyList()) {}
 
         }
     }
 
     @Composable
     fun ChatScreen(messages: List<ChatLogEntity>, onSendMessage: (String) -> Unit) {
+        val chatMessages by vm.chatMessages.observeAsState(emptyList())
+        LaunchedEffect(key1 = Unit) {
+            vm.chatbotSync("CG00001")
+        }
         Column(modifier = Modifier.fillMaxSize()) {
             LazyColumn(
                 modifier = Modifier.weight(1f),
                 reverseLayout = true // Ensures new messages appear at the bottom
             ) {
-                if (messages.isEmpty()) {
+                if (chatMessages.isEmpty()) {
                     item {
                         Text(
                             text = "No messages yet...",
@@ -124,10 +133,10 @@ class ChatbotActivity : ComponentActivity() {
                     }
                 } else {
                     items(
-                        messages.size
+                        chatMessages.size
                     ) { message -> // 'message' here is a ChatLogEntity
-                        ChatBubble(chatEntry = messages.get(message),
-                            isCurrentUserMessage = messages.get(message).username == activeUser)
+                        ChatBubble(chatEntry = chatMessages.get(message),
+                            isCurrentUserMessage = chatMessages.get(message).username == vm.username.value)
                     }
                 }
             }
@@ -141,7 +150,10 @@ class ChatbotActivity : ComponentActivity() {
 
         TextField(
             value = text,
-            onValueChange = {newText -> text = newText} ,
+            onValueChange = {newText ->
+                text = newText
+                vm.updateMessage(newText.text)
+                            } ,
             modifier = Modifier.fillMaxWidth(),
             label = { Text("Enter a message") },
             trailingIcon = {
@@ -149,6 +161,7 @@ class ChatbotActivity : ComponentActivity() {
                     val currentText = text.text
                     if (currentText.isNotBlank()) {
                         onSendMessage(currentText)
+                        vm.sendMessages()
                         text = TextFieldValue("") // Clear the text field
                     }
                 }) {
@@ -244,7 +257,11 @@ class ChatbotActivity : ComponentActivity() {
                 }
             }
         }
-    }
 
+    }
+    override fun onResume() {
+        super.onResume()
+        vm.chatbotSync("GC00001")
+    }
 
 }

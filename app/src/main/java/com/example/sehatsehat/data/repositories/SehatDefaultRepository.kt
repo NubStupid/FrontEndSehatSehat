@@ -1,5 +1,6 @@
 package com.example.sehatsehat.data.repositories
 
+import android.util.Log
 import com.example.sehatsehat.data.sources.local.ChatLogEntity
 import com.example.sehatsehat.data.sources.local.LocalDataSource
 import com.example.sehatsehat.data.sources.remote.ChatBotDTO
@@ -10,8 +11,12 @@ class SehatDefaultRepository (
     private val localDataSource:LocalDataSource,
     private val remoteDataSource:RemoteDataSource
 ):SehatRepository{
-    override suspend fun sync() {
-        TODO("Not yet implemented")
+
+    override suspend fun chatGroupSync(group_id: String) {
+        val clientChatGroup = localDataSource.getFromGroupChatLog(group_id)
+        Log.d("Test_Sync_clientCG",clientChatGroup.size.toString())
+        val serverChatGroup = remoteDataSource.syncChatGroup(group_id,clientChatGroup)
+        localDataSource.syncChatGroup(group_id,serverChatGroup.chats)
     }
 
     override suspend fun getAllChatLog(): List<ChatLogEntity> {

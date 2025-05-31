@@ -2,8 +2,10 @@ package com.example.sehatsehat.data.sources.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.squareup.moshi.JsonClass
 import java.util.Date
 
+    @JsonClass(generateAdapter = true)
     @Entity(tableName = "chat_log")
     data class ChatLogEntity(
         @PrimaryKey(false)

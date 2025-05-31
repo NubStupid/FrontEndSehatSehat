@@ -2,8 +2,8 @@ package com.example.sehatsehat.data.repositories
 
 import com.example.sehatsehat.data.sources.local.ChatLogEntity
 
-interface SehatRepository {
-    suspend fun sync()
+interface SehatRepository{
+    suspend fun chatGroupSync(group_id: String)
 
     suspend fun getAllChatLog():List<ChatLogEntity>
     suspend fun getFromGroupChatLog(group_id:String): List<ChatLogEntity>

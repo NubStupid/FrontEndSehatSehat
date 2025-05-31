@@ -1,6 +1,5 @@
 package com.example.sehatsehat.data.sources.local
 
-import com.example.sehatsehat.data.sources.DatabaseEntity
 import java.util.Date
 
 class RoomDataSource(
@@ -8,14 +7,12 @@ class RoomDataSource(
 ):LocalDataSource{
 
 
-    override suspend fun getUnsynced(): DatabaseEntity {
-        TODO("Not yet implemented")
+    override suspend fun syncChatGroup(group_id: String, logs: List<ChatLogEntity>) {
+        db.chatLogDao().deleteGroupChat(group_id)
+        for (log in logs){
+            db.chatLogDao().insert(log)
+        }
     }
-
-    override suspend fun sync(database: DatabaseEntity) {
-        TODO("Not yet implemented")
-    }
-
 
 
     override suspend fun getAllChatLog(): List<ChatLogEntity> {
