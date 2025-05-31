@@ -13,9 +13,9 @@
         android:theme="@style/Theme.SehatSehat"
         tools:targetApi="31">
         <activity
-            android:name=".ui.customer.ChatbotActivity"
+            android:name=".ui.admin.AdminHomepageActivity"
             android:exported="false"
-            android:label="@string/title_activity_chatbot"
+            android:label="@string/title_activity_admin_homepage"
             android:theme="@style/Theme.SehatSehat" />
         <activity
             android:name=".MainActivity"
@@ -23,9 +23,9 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.SehatSehat" />
         <activity
-            android:name=".ui.admin.AdminHomepageActivity"
+            android:name=".ui.customer.ChatbotActivity"
             android:exported="true"
-            android:label="@string/title_activity_admin_homepage"
+            android:label="@string/title_activity_chatbot"
             android:theme="@style/Theme.SehatSehat">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
