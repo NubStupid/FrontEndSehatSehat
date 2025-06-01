@@ -16,4 +16,16 @@ import java.util.Date
         val createdAt: Long = Date().time,
         var updatedAt: Long = Date().time,
         var deletedAt: Long?=null
-    )
+    ){
+        init{
+            if(content.isNullOrEmpty()){
+                throw IllegalArgumentException("Content must not be empty!")
+            }
+            if(username.isNullOrEmpty()){
+                throw IllegalArgumentException("Username must not be empty!")
+            }
+            if(chat_group_id.isNullOrEmpty()){
+                throw IllegalArgumentException("Chat group id must not be empty!")
+            }
+        }
+    }

@@ -10,6 +10,7 @@ android {
     namespace = "com.example.sehatsehat"
     compileSdk = 35
 
+
     defaultConfig {
         applicationId = "com.example.sehatsehat"
         minSdk = 26
@@ -39,6 +40,13 @@ android {
     buildFeatures {
         compose = true
         dataBinding = true
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1,LICENSE.md,LICENSE-notice.md}"
+            // Or more specifically for your current error:
+            // excludes += "/META-INF/LICENSE.md"
+        }
     }
 }
 
@@ -80,11 +88,11 @@ dependencies {
 //    implementation("com.github.ehsannarmani:compose-charts:latest_version")
 
     implementation("androidx.compose.runtime:runtime-livedata:1.7.0-beta01")
-
+    // testing suspend function
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
-// untuk membuat stub
+    // untuk membuat stub
     testImplementation("io.mockk:mockk:1.14.2")
     // testing multithread
     testImplementation("androidx.arch.core:core-testing:2.1.0")
-
+    androidTestImplementation("io.mockk:mockk-android:1.14.2")
 }
