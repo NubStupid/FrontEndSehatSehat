@@ -1,6 +1,7 @@
 package com.example.sehatsehat.ui.customer
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -18,15 +19,21 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -48,64 +55,14 @@ import java.util.UUID
 import kotlin.text.format
 import kotlin.text.isNotBlank
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.text.style.TextOverflow
 
 class ChatbotActivity : ComponentActivity() {
     val vm by viewModels<ChatbotViewModel>(){SehatViewModelFactory}
-    val dummyChatLogsList: List<ChatLogEntity> = listOf(
-        ChatLogEntity(
-            id = UUID.randomUUID().toString(),
-            chat_group_id = "general_chat_01",
-            username = "UserA",
-            content = "Hey everyone! What's up?",
-            createdAt = Date().time - (10 * 60 * 1000L), // 10 minutes ago
-            updatedAt = Date().time - (10 * 60 * 1000L)
-        ),
-        ChatLogEntity(
-            id = UUID.randomUUID().toString(),
-            chat_group_id = "general_chat_01",
-            username = "UserB",
-            content = "Not much, just chilling. You?",
-            createdAt = Date().time - (8 * 60 * 1000L), // 8 minutes ago
-            updatedAt = Date().time - (8 * 60 * 1000L)
-        ),
-        ChatLogEntity(
-            id = UUID.randomUUID().toString(),
-            chat_group_id = "project_alpha_discussion",
-            username = "UserC",
-            content = "Anyone made progress on task #123?",
-            createdAt = Date().time - (15 * 60 * 1000L), // 15 minutes ago
-            updatedAt = Date().time - (15 * 60 * 1000L)
-        ),
-        ChatLogEntity(
-            id = UUID.randomUUID().toString(),
-            chat_group_id = "general_chat_01",
-            username = "UserA",
-            content = "Just finished a big report. Feeling relieved!",
-            createdAt = Date().time - (5 * 60 * 1000L), // 5 minutes ago
-            updatedAt = Date().time - (5 * 60 * 1000L)
-        ),
-        ChatLogEntity(
-            id = UUID.randomUUID().toString(),
-            chat_group_id = "project_alpha_discussion",
-            username = "UserD",
-            content = "Yes, I pushed some updates for task #123 a few minutes ago.",
-            createdAt = Date().time - (3 * 60 * 1000L), // 3 minutes ago
-            updatedAt = Date().time - (2 * 60 * 1000L) // Edited 2 minutes ago
-        ),
-        ChatLogEntity(
-            id = UUID.randomUUID().toString(),
-            chat_group_id = "random_talk",
-            username = "UserE",
-            content = "This message is marked as deleted.",
-            createdAt = Date().time - (30 * 60 * 1000L), // 30 minutes ago
-            updatedAt = Date().time - (28 * 60 * 1000L), // 28 minutes ago
-            deletedAt = Date().time - (25 * 60 * 1000L)  // Deleted 25 minutes ago
-        )
-    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        vm.init("john_doe", "CG00001")
+        vm.init("john_doe", "john_doe_chatbot")
         enableEdgeToEdge()
         setContent {
             ChatScreen(messages = vm.chatMessages.value ?: emptyList()) {}
@@ -117,30 +74,41 @@ class ChatbotActivity : ComponentActivity() {
     fun ChatScreen(messages: List<ChatLogEntity>, onSendMessage: (String) -> Unit) {
         val chatMessages by vm.chatMessages.observeAsState(emptyList())
         LaunchedEffect(key1 = Unit) {
-            vm.chatbotSync("CG00001")
+            Log.d("DQWD",vm.chatGroup.value!!)
+            vm.chatbotSync(vm.chatGroup.value!!)
         }
-        Column(modifier = Modifier.fillMaxSize()) {
-            LazyColumn(
-                modifier = Modifier.weight(1f),
-                reverseLayout = true // Ensures new messages appear at the bottom
-            ) {
-                if (chatMessages.isEmpty()) {
-                    item {
-                        Text(
-                            text = "No messages yet...",
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    }
-                } else {
-                    items(
-                        chatMessages.size
-                    ) { message -> // 'message' here is a ChatLogEntity
-                        ChatBubble(chatEntry = chatMessages.get(message),
-                            isCurrentUserMessage = chatMessages.get(message).username == vm.username.value)
+        Scaffold(
+            topBar = {
+                ChatbotTopAppBar(
+                    onNavigationIconClick = {}
+                )
+            }
+        ) { innerPadding ->
+            Column(modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)) {
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    reverseLayout = true // Ensures new messages appear at the bottom
+                ) {
+                    if (chatMessages.isEmpty()) {
+                        item {
+                            Text(
+                                text = "No messages yet...",
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        }
+                    } else {
+                        items(
+                            chatMessages.size
+                        ) { message -> // 'message' here is a ChatLogEntity
+                            ChatBubble(chatEntry = chatMessages.get(message),
+                                isCurrentUserMessage = chatMessages.get(message).username == vm.username.value)
+                        }
                     }
                 }
+                MessageInput(onSendMessage) // Pass a callback for handling new messages
             }
-            MessageInput(onSendMessage) // Pass a callback for handling new messages
         }
     }
 
@@ -258,6 +226,44 @@ class ChatbotActivity : ComponentActivity() {
             }
         }
 
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class) // CenterAlignedTopAppBar is experimental
+    @Composable
+    fun ChatbotTopAppBar(
+        modifier: Modifier = Modifier,
+        onNavigationIconClick: (() -> Unit)? = null, // Optional: For a back arrow or menu
+        onActionIconClick: (() -> Unit)? = null      // Optional: For an action icon like settings
+    ) {
+        CenterAlignedTopAppBar(
+            title = {
+                Text(
+                    "Chatbot",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.titleLarge // Or any other style you prefer
+                )
+            },
+            modifier = modifier,
+            navigationIcon = {
+                onNavigationIconClick?.let { onClick ->
+                    IconButton(onClick = onClick) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack, // Or Icons.Filled.Menu
+                            contentDescription = "Navigation Icon" // "Back" or "Open navigation menu"
+                        )
+                    }
+                }
+            },
+            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primary, // Example: Blue background
+                titleContentColor = MaterialTheme.colorScheme.onPrimary, // Example: White text
+                navigationIconContentColor = MaterialTheme.colorScheme.onPrimary,
+                actionIconContentColor = MaterialTheme.colorScheme.onPrimary
+            )
+            // You can also customize scrollBehavior if needed
+            // scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+        )
     }
     override fun onResume() {
         super.onResume()

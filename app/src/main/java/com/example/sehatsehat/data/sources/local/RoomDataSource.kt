@@ -1,5 +1,6 @@
 package com.example.sehatsehat.data.sources.local
 
+import android.util.Log
 import java.util.Date
 
 class RoomDataSource(
@@ -30,8 +31,9 @@ class RoomDataSource(
         }
     }
 
-    override suspend fun getFromChatbotChatLog(group_id: String): List<ChatLogEntity> {
-        return db.chatLogDao().getChatFromBot(group_id)
+    override suspend fun getFromChatbotChatLog(username: String): List<ChatLogEntity> {
+        Log.d("Room_check",username)
+        return db.chatLogDao().getChatFromBot(username)
     }
 
     override suspend fun getFromGroupChatLog(group_id: String): List<ChatLogEntity> {

@@ -16,6 +16,7 @@ class SehatDefaultRepository (
         val clientChatGroup = localDataSource.getFromGroupChatLog(group_id)
         Log.d("Test_Sync_clientCG",clientChatGroup.size.toString())
         val serverChatGroup = remoteDataSource.syncChatGroup(group_id,clientChatGroup)
+        Log.d("Test_Sync_serverCG",serverChatGroup.chats.size.toString())
         localDataSource.syncChatGroup(group_id,serverChatGroup.chats)
     }
 
@@ -28,8 +29,8 @@ class SehatDefaultRepository (
 
     }
 
-    override suspend fun getFromChatbotChatLog(group_id: String): List<ChatLogEntity> {
-        TODO("Not yet implemented")
+    override suspend fun getFromChatbotChatLog(username: String): List<ChatLogEntity> {
+        return localDataSource.getFromChatbotChatLog(username)
     }
 
     override suspend fun getFromGroupChatLog(group_id: String): List<ChatLogEntity> {

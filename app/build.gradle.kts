@@ -80,4 +80,11 @@ dependencies {
 //    implementation("com.github.ehsannarmani:compose-charts:latest_version")
 
     implementation("androidx.compose.runtime:runtime-livedata:1.7.0-beta01")
+
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
+// untuk membuat stub
+    testImplementation("io.mockk:mockk:1.14.2")
+    // testing multithread
+    testImplementation("androidx.arch.core:core-testing:2.1.0")
+
 }

@@ -32,12 +32,14 @@ class ChatbotViewModel(
     fun init(username:String, chatGroup:String){
         viewModelScope.launch {
             chatbotSync(chatGroup)
-            _chatMessages.value = sehatRepository.getAllChatLog().sortedByDescending {
+            _chatMessages.value = sehatRepository.getFromChatbotChatLog(username).sortedByDescending{
                 it.createdAt
             }
             _username.value = username
             _chatGroup.value = chatGroup
             Log.d("ChatbotViewModel", "init: ${_username.value}")
+            Log.d("ChatbotViewModel", "init: ${_chatGroup.value}")
+            Log.d("ChatbotViewModel", "init: ${_chatMessages.value.size}")
         }
     }
 
@@ -53,8 +55,8 @@ class ChatbotViewModel(
 
     fun sendMessages(){
         viewModelScope.launch {
-            sehatRepository.insertChatLog(currentMessage.value!!,username.value!!, chatGroup.value!!)
-            _chatMessages.value = sehatRepository.getAllChatLog().sortedByDescending {
+            sehatRepository.chatToChatbot(currentMessage.value!!,username.value!!, chatGroup.value!!)
+            _chatMessages.value = sehatRepository.getFromChatbotChatLog(username.value!!).sortedByDescending{
                 it.createdAt
             }
             Log.d("ChatbotViewModel", "sendMessages: ${_chatMessages.value.size}")
