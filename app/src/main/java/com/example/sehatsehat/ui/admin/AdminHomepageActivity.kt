@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Send
 import androidx.compose.material.icons.filled.MoreVert
@@ -43,10 +45,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
-import com.anychart.AnyChart
-import com.anychart.AnyChartView
-import com.anychart.chart.common.dataentry.ValueDataEntry
+import co.yml.charts.common.model.PlotType
+import co.yml.charts.ui.piechart.charts.PieChart
+import co.yml.charts.ui.piechart.models.PieChartConfig
+import co.yml.charts.ui.piechart.models.PieChartData
 import com.example.sehatsehat.R
 
 class AdminHomepageActivity : ComponentActivity() {
@@ -54,8 +56,8 @@ class AdminHomepageActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            AdminTopBar()
             Column(modifier = Modifier.fillMaxSize()) {
+                AdminTopBar()
                 Text("My Chart", fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 AnyChartComposable()
             }
@@ -142,22 +144,30 @@ class AdminHomepageActivity : ComponentActivity() {
 
     @Composable
     fun AnyChartComposable() {
-        AndroidView(
-            factory = { context ->
-                LayoutInflater.from(context).inflate(R.layout.chart_view, null).apply {
-                    val anyChartView = findViewById<AnyChartView>(R.id.any_chart_view)
-                    val pieChart = AnyChart.pie()
-
-                    val data = listOf(
-                        ValueDataEntry("John", 10000),
-                        ValueDataEntry("Jake", 12000),
-                        ValueDataEntry("Peter", 18000)
-                    )
-
-                    pieChart.data(data)
-                    anyChartView.setChart(pieChart)
-                }
-            }
+        val pieChartData = PieChartData(
+            slices = listOf(
+                PieChartData.Slice("SciFi", 65f, Color(0xFF333333)),
+                PieChartData.Slice("Comedy", 35f, Color(0xFF666a86)),
+                PieChartData.Slice("Drama", 10f, Color(0xFF95B8D1)),
+                PieChartData.Slice("Romance", 40f, Color(0xFFF53844))
+            ), plotType = PlotType.Pie
         )
+
+        val pieChartConfig = PieChartConfig(
+            isAnimationEnable = true,
+            showSliceLabels = true,
+            animationDuration = 1500,
+            labelVisible = true,
+            labelType = PieChartConfig.LabelType.VALUE
+        )
+
+        PieChart(
+            modifier = Modifier
+                .width(400.dp)
+                .height(400.dp),
+            pieChartData,
+            pieChartConfig
+        )
+
     }
 }

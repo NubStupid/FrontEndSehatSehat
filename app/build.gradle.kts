@@ -10,9 +10,10 @@ android {
     namespace = "com.example.sehatsehat"
     compileSdk = 35
 
+
     defaultConfig {
         applicationId = "com.example.sehatsehat"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -41,6 +42,14 @@ android {
     }
     buildFeatures {
         compose = true
+        dataBinding = true
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1,LICENSE.md,LICENSE-notice.md}"
+            // Or more specifically for your current error:
+            // excludes += "/META-INF/LICENSE.md"
+        }
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -86,6 +95,15 @@ dependencies {
     kapt("com.squareup.moshi:moshi-kotlin-codegen:1.15.2")
 
     implementation("androidx.compose.material3:material3:1.3.2")
+    implementation ("co.yml:ycharts:2.1.0")
+//    implementation("com.github.ehsannarmani:compose-charts:latest_version")
 
-    implementation("com.github.AnyChart:AnyChart-Android:1.1.5")
+    implementation("androidx.compose.runtime:runtime-livedata:1.7.0-beta01")
+    // testing suspend function
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
+    // untuk membuat stub
+    testImplementation("io.mockk:mockk:1.14.2")
+    // testing multithread
+    testImplementation("androidx.arch.core:core-testing:2.1.0")
+    androidTestImplementation("io.mockk:mockk-android:1.14.2")
 }
