@@ -1,6 +1,6 @@
 package com.example.sehatsehat.data.sources.remote
 
-import com.example.sehatsehat.data.sources.local.ChatLogEntity
+import com.example.sehatsehat.model.ChatLogEntity
 
 class RetrofitDataSource(
     private val retrofitService:WebService

@@ -2,11 +2,9 @@ package com.example.sehatsehat.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.serialization.Serializable
 
-@Serializable
 @Entity("users")
-data class User(
+data class UserEntity(
     @PrimaryKey(autoGenerate = false) val username: String,
     var display_name: String,
     var password: String,

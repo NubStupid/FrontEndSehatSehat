@@ -6,9 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.sehatsehat.data.App
-import com.example.sehatsehat.data.AppDatabase
-import com.example.sehatsehat.model.UserRequest
+import com.example.sehatsehat.SehatApplication
+import com.example.sehatsehat.data.sources.remote.UserDTO
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -25,7 +24,7 @@ sealed class RegisterUiState {
 
 class RegisterViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val webService = App.retrofitService
+    private val webService = SehatApplication.retrofitService
 
     var username by mutableStateOf("")
         private set
@@ -107,7 +106,7 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 // Bangun request body
-                val userRequest = UserRequest(
+                val userRequest = UserDTO(
                     username = username,
                     display_name = displayName,
                     password = password,

@@ -1,6 +1,7 @@
 package com.example.sehatsehat.data.sources.local
 
 import android.util.Log
+import com.example.sehatsehat.model.ChatLogEntity
 import java.util.Date
 
 class RoomDataSource(

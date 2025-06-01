@@ -1,5 +1,6 @@
 package com.example.sehatsehat.data.sources.local
 
+import com.example.sehatsehat.model.ChatLogEntity
 import org.junit.Assert.*
 
 import org.junit.Before
@@ -7,7 +8,7 @@ import org.junit.Test
 
 class ChatLogEntityTest {
 
-    lateinit var test_Chatlog:ChatLogEntity
+    lateinit var test_Chatlog: ChatLogEntity
     @Before
     fun setUp() {
         test_Chatlog = ChatLogEntity("CL00001","GC00001","john_doe","Hello, how can I help you today")

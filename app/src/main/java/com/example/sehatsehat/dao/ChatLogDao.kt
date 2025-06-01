@@ -1,4 +1,4 @@
-package com.example.sehatsehat.data.sources.local
+package com.example.sehatsehat.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.example.sehatsehat.model.ChatLogEntity
 
 @Dao
 interface ChatLogDao {
@@ -24,7 +25,7 @@ interface ChatLogDao {
     @Query("SELECT * from chat_log where chat_group_id =:username || '_chatbot'")
     suspend fun getChatFromBot(username:String):List<ChatLogEntity>
     @Query("SELECT * from chat_log where id =:id")
-    suspend fun getChatFromId(id:String):ChatLogEntity?
+    suspend fun getChatFromId(id:String): ChatLogEntity?
     @Query("SELECT * from chat_log")
     suspend fun getAll():List<ChatLogEntity>
     @Query("SELECT COUNT(*) from chat_log")

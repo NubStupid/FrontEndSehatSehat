@@ -1,5 +1,7 @@
 package com.example.sehatsehat.data.sources.local
 
+import com.example.sehatsehat.model.ChatLogEntity
+
 interface LocalDataSource {
 //    suspend fun getAll():List<Todo>
 //    suspend fun getById(id:String): Todo?

@@ -1,6 +1,6 @@
 package com.example.sehatsehat.data.repositories
 
-import com.example.sehatsehat.data.sources.local.ChatLogEntity
+import com.example.sehatsehat.model.ChatLogEntity
 import com.example.sehatsehat.data.sources.local.LocalDataSource
 import com.example.sehatsehat.data.sources.remote.RemoteDataSource
 import io.mockk.coEvery

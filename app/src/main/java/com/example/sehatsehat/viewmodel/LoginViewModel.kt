@@ -6,9 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.sehatsehat.LoginRequest
-import com.example.sehatsehat.LoginResponse
-import com.example.sehatsehat.data.App
+import com.example.sehatsehat.SehatApplication
+import com.example.sehatsehat.data.sources.remote.LoginDRO
+import com.example.sehatsehat.data.sources.remote.LoginDTO
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -23,7 +23,7 @@ sealed class LoginUiState {
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val webService = App.retrofitService
+    private val webService = SehatApplication.retrofitService
 
     var email by mutableStateOf("")
         private set
@@ -72,11 +72,11 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 // 3. Panggil API login
-                val response = webService.login(LoginRequest(username = email, password = password))
+                val response = webService.login(LoginDTO(username = email, password = password))
 
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
-                        val loginBody: LoginResponse? = response.body()
+                        val loginBody: LoginDRO? = response.body()
                         val user = loginBody?.user
                         if (user != null) {
                             // Ambil displayName dari UserResponse

@@ -1,4 +1,4 @@
-package com.example.sehatsehat.ui.customer
+package com.example.sehatsehat.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -6,9 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sehatsehat.data.repositories.SehatRepository
-import com.example.sehatsehat.data.sources.local.ChatLogEntity
+import com.example.sehatsehat.model.ChatLogEntity
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 class ChatbotViewModel(
     private val sehatRepository: SehatRepository

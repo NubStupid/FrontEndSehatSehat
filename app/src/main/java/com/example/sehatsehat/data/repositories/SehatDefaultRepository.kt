@@ -1,7 +1,7 @@
 package com.example.sehatsehat.data.repositories
 
 import android.util.Log
-import com.example.sehatsehat.data.sources.local.ChatLogEntity
+import com.example.sehatsehat.model.ChatLogEntity
 import com.example.sehatsehat.data.sources.local.LocalDataSource
 import com.example.sehatsehat.data.sources.remote.ChatBotDTO
 import com.example.sehatsehat.data.sources.remote.ChatLogDTO

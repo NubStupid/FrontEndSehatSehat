@@ -1,6 +1,6 @@
 package com.example.sehatsehat.data.repositories
 
-import com.example.sehatsehat.data.sources.local.ChatLogEntity
+import com.example.sehatsehat.model.ChatLogEntity
 
 interface SehatRepository{
     suspend fun chatGroupSync(group_id: String)

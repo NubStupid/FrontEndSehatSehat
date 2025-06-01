@@ -1,4 +1,4 @@
-package com.example.sehatsehat.data.sources.local
+package com.example.sehatsehat.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
