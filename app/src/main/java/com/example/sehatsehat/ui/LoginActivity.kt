@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sehatsehat.ui.admin.AdminHomepageActivity
 import com.example.sehatsehat.ui.customer.CustomerHomepageActivity
+import com.example.sehatsehat.ui.expert.ExpertHomepageActivity
 import com.example.sehatsehat.ui.theme.SehatSehatTheme
 import com.example.sehatsehat.viewmodel.LoginUiState
 import com.example.sehatsehat.viewmodel.LoginViewModel
@@ -67,6 +68,17 @@ class LoginActivity : ComponentActivity() {
                         intent.putExtra("display_name", displayName)
                         startActivity(intent)
                         finish()
+                    },
+                    onLoginExpert = { displayName ->
+                        Toast.makeText(
+                            this,
+                            "Login expert berhasil! Selamat datang $displayName",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        val intent = Intent(this, ExpertHomepageActivity::class.java)
+                        intent.putExtra("display_name", displayName)
+                        startActivity(intent)
+                        finish()
                     }
                 )
             }
@@ -79,7 +91,8 @@ class LoginActivity : ComponentActivity() {
 fun LoginWithBottomNav(
     viewModel: LoginViewModel,
     onLoginAdmin: (String) -> Unit,
-    onLoginCustomer: (String) -> Unit
+    onLoginCustomer: (String) -> Unit,
+    onLoginExpert: (String) -> Unit
 ) {
     val uiState = viewModel.uiState
     val context = LocalContext.current
@@ -99,6 +112,10 @@ fun LoginWithBottomNav(
                 onLoginAdmin(uiState.displayName)
             }
             is LoginUiState.SuccessCustomer -> {
+                viewModel.resetState()
+                onLoginCustomer(uiState.displayName)
+            }
+            is LoginUiState.SuccessExpert -> {
                 viewModel.resetState()
                 onLoginCustomer(uiState.displayName)
             }

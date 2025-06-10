@@ -20,6 +20,7 @@ sealed class LoginUiState {
     object Loading : LoginUiState()
     data class SuccessAdmin(val displayName: String) : LoginUiState()
     data class SuccessCustomer(val displayName: String) : LoginUiState()
+    data class SuccessExpert(val displayName: String) : LoginUiState()
     data class Error(val message: String) : LoginUiState()
 }
 
@@ -85,6 +86,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                         when (user.role) {
                             "admin" -> uiState = LoginUiState.SuccessAdmin(displayName)
                             "customer" -> uiState = LoginUiState.SuccessCustomer(displayName)
+                            "expert" -> uiState = LoginUiState.SuccessExpert(displayName)
                             else -> uiState = LoginUiState.Error("Role tidak dikenali")
                         }
                     } else {
