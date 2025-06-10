@@ -1,6 +1,7 @@
 package com.example.sehatsehat.data.sources.local
 
 import com.example.sehatsehat.model.ChatLogEntity
+import com.example.sehatsehat.model.ProgramEntity
 
 interface LocalDataSource {
 //    suspend fun getAll():List<Todo>
@@ -17,5 +18,12 @@ interface LocalDataSource {
     suspend fun deleteChatLog(id:String): ChatLogEntity
 
     suspend fun syncChatGroup(group_id:String,logs:List<ChatLogEntity>)
+
+    // Program
+    suspend fun getAllPrograms(): List<ProgramEntity>
+    suspend fun getProgramById(id: String): ProgramEntity?
+    suspend fun insertProgram(program: ProgramEntity)
+    suspend fun updateProgram(program: ProgramEntity)
+    suspend fun deleteProgram(program: ProgramEntity)
 
 }

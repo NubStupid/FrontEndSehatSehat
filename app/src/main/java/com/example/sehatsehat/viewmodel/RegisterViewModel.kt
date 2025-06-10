@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sehatsehat.SehatApplication
+import com.example.sehatsehat.data.sources.remote.RegisterDRO
 import com.example.sehatsehat.data.sources.remote.UserDTO
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -115,17 +116,17 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
                     pp_url = ppUrl
                 )
 
-                // Panggil API
-                val response = webService.register(userRequest)
+                // Panggil API → sekarang mengembalikan RegisterDRO langsung
+                val registerBody: RegisterDRO = webService.register(userRequest)
 
                 withContext(Dispatchers.Main) {
-                    if (response.isSuccessful) {
-                        // Misalnya server mengembalikan { message: "...", user: {...} }
+                    // Server mengembalikan RegisterDRO dengan field "status" dan "message"
+                    if (registerBody.user != null) {
+                        // Registrasi berhasil jika objek UserDRO tidak null
                         uiState = RegisterUiState.Success
                     } else {
-                        // Ambil pesan error jika ada di errorBody
-                        val err = response.errorBody()?.string()
-                            ?: "Registrasi gagal (kode ${response.code()})"
+                        // Jika user null, anggap error; pesan ada di registerBody.message
+                        val err = registerBody.message.ifBlank { "Registrasi gagal." }
                         uiState = RegisterUiState.Error(err)
                     }
                 }

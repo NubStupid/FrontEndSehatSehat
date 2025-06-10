@@ -2,6 +2,7 @@ package com.example.sehatsehat.data.sources.local
 
 import android.util.Log
 import com.example.sehatsehat.model.ChatLogEntity
+import com.example.sehatsehat.model.ProgramEntity
 import java.util.Date
 
 class RoomDataSource(
@@ -61,5 +62,26 @@ class RoomDataSource(
         val chatlog = ChatLogEntity(id,chat_group,username,content)
         db.chatLogDao().insert(chatlog)
         return chatlog
+    }
+
+    // program
+    override suspend fun getAllPrograms(): List<ProgramEntity> {
+        return db.programDao().getAllPrograms()
+    }
+
+    override suspend fun getProgramById(id: String): ProgramEntity? {
+        return db.programDao().findById(id)
+    }
+
+    override suspend fun insertProgram(program: ProgramEntity) {
+        db.programDao().insert(program)
+    }
+
+    override suspend fun updateProgram(program: ProgramEntity) {
+        db.programDao().update(program)
+    }
+
+    override suspend fun deleteProgram(program: ProgramEntity) {
+        db.programDao().delete(program)
     }
 }

@@ -64,42 +64,28 @@ fun RegisterScreen(
     val ppUrl by remember { derivedStateOf { viewModel.ppUrl } }
     val uiState by remember { derivedStateOf { viewModel.uiState } }
     val context = LocalContext.current
-
-    // State untuk menampilkan DatePicker
     val showDatePicker = remember { mutableStateOf(false) }
 
-    // Panggil DatePickerDialog hanya sekali saat flag true
     if (showDatePicker.value) {
         LaunchedEffect(Unit) {
             val cal = Calendar.getInstance()
-            val year = cal.get(Calendar.YEAR)
-            val month = cal.get(Calendar.MONTH)
-            val day = cal.get(Calendar.DAY_OF_MONTH)
-
             DatePickerDialog(
                 context,
-                { _, selectedYear, selectedMonth, selectedDay ->
-                    val monthStr = String.format("%02d", selectedMonth + 1)
-                    val dayStr = String.format("%02d", selectedDay)
-                    val dobString = "$selectedYear-$monthStr-$dayStr"
+                { _, year, month, day ->
+                    val dobString = "%04d-%02d-%02d".format(year, month + 1, day)
                     viewModel.onDobChange(dobString)
                     showDatePicker.value = false
                 },
-                year, month, day
+                cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
     }
 
-    // Tangani uiState: Error atau Success
+    // Handle UI state
     LaunchedEffect(uiState) {
         when (uiState) {
             is RegisterUiState.Error -> {
-                Toast.makeText(
-                    context,
-                    (uiState as RegisterUiState.Error).message,
-                    Toast.LENGTH_SHORT
-                ).show()
-                Log.e("error", (uiState as RegisterUiState.Error).message)
+                Toast.makeText(context, (uiState as RegisterUiState.Error).message, Toast.LENGTH_SHORT).show()
                 viewModel.resetState()
             }
             is RegisterUiState.Success -> {
@@ -118,15 +104,17 @@ fun RegisterScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Register", style = MaterialTheme.typography.headlineSmall)
-        Spacer(modifier = Modifier.height(24.dp))
+        Text(
+            text = "Daftar",
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier.padding(bottom = 24.dp)
+        )
 
-        // Username
         OutlinedTextField(
             value = username,
             onValueChange = { viewModel.onUsernameChange(it) },
             label = { Text("Username") },
-            leadingIcon = { Icon(imageVector = Icons.Default.Person, contentDescription = "Username Icon") },
+            leadingIcon = { Icon(imageVector = Icons.Default.Person, contentDescription = null) },
             singleLine = true,
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
             modifier = Modifier.fillMaxWidth(),
@@ -134,12 +122,11 @@ fun RegisterScreen(
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Display Name
         OutlinedTextField(
             value = displayName,
             onValueChange = { viewModel.onDisplayNameChange(it) },
             label = { Text("Display Name") },
-            leadingIcon = { Icon(imageVector = Icons.Default.Person, contentDescription = "Display Name Icon") },
+            leadingIcon = { Icon(imageVector = Icons.Default.Person, contentDescription = null) },
             singleLine = true,
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
             modifier = Modifier.fillMaxWidth(),
@@ -147,12 +134,11 @@ fun RegisterScreen(
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Password
         OutlinedTextField(
             value = password,
             onValueChange = { viewModel.onPasswordChange(it) },
             label = { Text("Password") },
-            leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "Lock Icon") },
+            leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = null) },
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
@@ -161,7 +147,7 @@ fun RegisterScreen(
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        // ─── Tanggal Lahir ─────────────────────────────────────────────────────────
+        // Tanggal Lahir
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -171,19 +157,16 @@ fun RegisterScreen(
         ) {
             OutlinedTextField(
                 value = dob,
-                onValueChange = { /* no-op */ },
+                onValueChange = {},
                 label = { Text("Tanggal Lahir") },
-                singleLine = true,
                 readOnly = true,
-                enabled = false, // agar klik diarahkan ke Box
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
+                singleLine = true,
+                enabled = false,
+                modifier = Modifier.fillMaxWidth()
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
-        // ─────────────────────────────────────────────────────────────────────────────
 
-        // Profile Picture URL
         OutlinedTextField(
             value = ppUrl,
             onValueChange = { viewModel.onPpUrlChange(it) },
@@ -195,7 +178,6 @@ fun RegisterScreen(
         )
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Tombol Daftar
         Button(
             onClick = { viewModel.register() },
             modifier = Modifier
@@ -204,7 +186,6 @@ fun RegisterScreen(
             enabled = uiState != RegisterUiState.Loading
         ) {
             if (uiState is RegisterUiState.Loading) {
-                // Tampilkan progress kecil di dalam button
                 CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(text = "Mendaftar...")

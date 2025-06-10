@@ -5,12 +5,15 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.sehatsehat.dao.ChatLogDao
+import com.example.sehatsehat.dao.ProgramDao
 import com.example.sehatsehat.model.ChatLogEntity
+import com.example.sehatsehat.model.ProgramEntity
 import com.example.sehatsehat.model.UserEntity
 
-@Database(entities = [ChatLogEntity::class, UserEntity::class], version = 1)
+@Database(entities = [ChatLogEntity::class, UserEntity::class, ProgramEntity::class], version = 2)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun chatLogDao(): ChatLogDao
+    abstract fun programDao(): ProgramDao
 
     companion object{
         @Volatile

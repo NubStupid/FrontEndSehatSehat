@@ -14,10 +14,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
+// Tambahkan dua jenis Success untuk membedakan navigasi admin vs customer
 sealed class LoginUiState {
     object Idle : LoginUiState()
     object Loading : LoginUiState()
-    data class Success(val displayName: String) : LoginUiState()
+    data class SuccessAdmin(val displayName: String) : LoginUiState()
+    data class SuccessCustomer(val displayName: String) : LoginUiState()
     data class Error(val message: String) : LoginUiState()
 }
 
@@ -71,24 +73,25 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                // 3. Panggil API login
-                val response = webService.login(LoginDTO(username = email, password = password))
+                // 3. Panggil API login → mengembalikan LoginDRO langsung
+                val loginBody: LoginDRO =
+                    webService.login(LoginDTO(username = email, password = password))
 
                 withContext(Dispatchers.Main) {
-                    if (response.isSuccessful) {
-                        val loginBody: LoginDRO? = response.body()
-                        val user = loginBody?.user
-                        if (user != null) {
-                            // Ambil displayName dari UserResponse
-                            val displayName = user.display_name
-                            uiState = LoginUiState.Success(displayName)
-                        } else {
-                            uiState = LoginUiState.Error("Response login tidak berisi data user")
+                    val user = loginBody.user
+                    if (user != null) {
+                        // Cek role: "admin" atau "customer"
+                        val displayName = user.display_name
+                        when (user.role) {
+                            "admin" -> uiState = LoginUiState.SuccessAdmin(displayName)
+                            "customer" -> uiState = LoginUiState.SuccessCustomer(displayName)
+                            else -> uiState = LoginUiState.Error("Role tidak dikenali")
                         }
                     } else {
-                        // Ambil pesan error dari server (bila ada)
-                        val err = response.errorBody()?.string()
-                            ?: "Login gagal (kode ${response.code()})"
+                        // Jika server mengembalikan pesan error di field message
+                        val err = loginBody.message.ifBlank {
+                            "Login gagal: data user tidak tersedia."
+                        }
                         uiState = LoginUiState.Error(err)
                     }
                 }

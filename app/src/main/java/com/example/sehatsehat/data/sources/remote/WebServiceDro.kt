@@ -1,6 +1,7 @@
 package com.example.sehatsehat.data.sources.remote
 
 import com.example.sehatsehat.model.ChatLogEntity
+import com.example.sehatsehat.model.ProgramEntity
 
 data class ChatBotMessage(
     val response:String
@@ -38,4 +39,27 @@ data class UserDRO(
 data class RegisterResponse(
     val message: String,
     val user: UserDRO? = null
+)
+
+data class ProgramDRO(
+    val status: Int,
+    val message: String,
+    val program: ProgramEntity? = null
+)
+
+/**
+ * DRO untuk daftar Program. Misalnya respons GET /api/v1/programs.
+ *
+ * Contoh JSON respons:
+ * {
+ *   "status": 200,
+ *   "programs": [
+ *     { "id": "P001", "title": "Program A", "description": "Deskripsi A", "createdAt": 1686000000000 },
+ *     { "id": "P002", "title": "Program B", "description": "Deskripsi B", "createdAt": 1686100000000 }
+ *   ]
+ * }
+ */
+data class ProgramListDRO(
+    val status: Int,
+    val programs: List<ProgramEntity>
 )

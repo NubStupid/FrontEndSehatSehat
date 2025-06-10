@@ -1,6 +1,8 @@
 package com.example.sehatsehat.data.sources.remote
 
 import com.example.sehatsehat.model.ChatLogEntity
+import com.example.sehatsehat.model.ProgramEntity
+import retrofit2.Response
 
 class RetrofitDataSource(
     private val retrofitService:WebService
@@ -19,5 +21,43 @@ class RetrofitDataSource(
 
     override suspend fun syncChatGroup(group_id: String, logs: List<ChatLogEntity>):ChatLogFromGroupDRO {
         return retrofitService.syncChatGroup(SyncChatGroupDTO(group_id,logs))
+    }
+
+    // ======================================
+    // 2) Auth / User
+    // ======================================
+    override suspend fun registerUser(user: UserDTO): RegisterDRO {
+        return retrofitService.register(user)
+    }
+
+    override suspend fun loginUser(credentials: LoginDTO): LoginDRO {
+        return retrofitService.login(credentials)
+    }
+
+    // ======================================
+    // 3) Program CRUD
+    // ======================================
+    override suspend fun getAllPrograms(): ProgramListDRO {
+        return retrofitService.getAllPrograms()
+    }
+
+    override suspend fun getProgramById(id: String): ProgramDRO {
+        return retrofitService.getProgramById(id)
+    }
+
+    override suspend fun insertProgram(program: ProgramEntity): ProgramDRO {
+        return retrofitService.insertProgram(program)
+    }
+
+    override suspend fun updateProgram(id: String, program: ProgramEntity): ProgramDRO {
+        return retrofitService.updateProgram(id, program)
+    }
+
+    override suspend fun deleteProgram(id: String) {
+        // Panggil endpoint DELETE → Response<Unit>
+        val response: Response<Unit> = retrofitService.deleteProgram(id)
+        if (!response.isSuccessful) {
+            throw RuntimeException("Gagal menghapus program id=$id (status code: ${response.code()})")
+        }
     }
 }
