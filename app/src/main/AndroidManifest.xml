@@ -28,11 +28,11 @@
             android:exported="false"
             android:label="@string/title_activity_admin_list_user"
             android:theme="@style/Theme.SehatSehat" />
-        <activity
-            android:name=".ui.admin.AdminProfileActivity"
-            android:exported="false"
-            android:label="@string/title_activity_admin_profile"
-            android:theme="@style/Theme.SehatSehat" /> <!-- LoginActivity set as the starting activity -->
+<!--        <activity-->
+<!--            android:name=".ui.admin.AdminProfileActivity"-->
+<!--            android:exported="false"-->
+<!--            android:label="@string/title_activity_admin_profile"-->
+<!--            android:theme="@style/Theme.SehatSehat" /> &lt;!&ndash; LoginActivity set as the starting activity &ndash;&gt;-->
         <activity
             android:name=".ui.LoginActivity"
             android:exported="true"
@@ -63,6 +63,14 @@
             android:name=".ui.customer.CustomerHomepageActivity"
             android:exported="false"
             android:label="@string/title_activity_customer_homepage"
+            android:theme="@style/Theme.SehatSehat" />
+        <activity
+            android:name=".ui.expert.ExpertHomepageActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SehatSehat" />
+        <activity
+            android:name=".ui.expert.ExpertEditProfileActivity"
+            android:exported="false"
             android:theme="@style/Theme.SehatSehat" />
         <activity
             android:name=".MainActivity"

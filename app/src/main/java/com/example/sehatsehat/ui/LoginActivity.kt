@@ -117,7 +117,7 @@ fun LoginWithBottomNav(
             }
             is LoginUiState.SuccessExpert -> {
                 viewModel.resetState()
-                onLoginCustomer(uiState.displayName)
+                onLoginExpert(uiState.displayName)
             }
             else -> Unit
         }

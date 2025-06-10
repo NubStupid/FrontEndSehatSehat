@@ -3,11 +3,11 @@ package com.example.sehatsehat.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.example.sehatsehat.data.converters.ListStringConverter
-import com.example.sehatsehat.data.converters.WorkoutSessionConverter
+//import com.example.sehatsehat.data.converters.ListStringConverter
+//import com.example.sehatsehat.data.converters.WorkoutSessionConverter
 
 @Entity(tableName = "fitness_programs")
-@TypeConverters(ListStringConverter::class, WorkoutSessionConverter::class)
+//@TypeConverters(ListStringConverter::class, WorkoutSessionConverter::class)
 data class FitnessProgram(
     @PrimaryKey val id: String = "",
     val title: String = "",

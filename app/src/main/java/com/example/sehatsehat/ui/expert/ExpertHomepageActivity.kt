@@ -1,10 +1,12 @@
 package com.example.sehatsehat.ui.expert
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,6 +39,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,6 +50,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -97,6 +101,7 @@ data class WorkoutCard(
 fun ExpertHomepage(displayName: String) {
     var selectedTab by remember { mutableStateOf(0) }
     val tabs = listOf("Schedule", "Program")
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -143,12 +148,31 @@ fun ExpertHomepage(displayName: String) {
                     verticalAlignment = Alignment.Top
                 ) {
                     Column {
-                        Text(
-                            text = displayName,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black
-                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = displayName,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black,
+                                modifier = Modifier.padding(end = 8.dp)
+                            )
+                            TextButton(
+                                onClick = {
+                                    val intent = Intent(context, ExpertEditProfileActivity::class.java).apply {
+                                        putExtra("display_name", displayName)
+                                    }
+                                    context.startActivity(intent)
+                                }
+                            ) {
+                                Text(
+                                    text = "Edit",
+                                    color = Color(0xFFFFB800), // Warna aksen
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp
+                                )
+                            }
+                        }
+
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.padding(top = 4.dp)
