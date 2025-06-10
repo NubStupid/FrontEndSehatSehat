@@ -27,7 +27,7 @@ class SehatApplication : Application() {
         val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
         val retrofit = Retrofit.Builder().addConverterFactory(
             MoshiConverterFactory.create(moshi)
-        ).baseUrl("http://192.168.18.197:3000/").build()
+        ).baseUrl("http://10.10.3.134:3000/").build()
         val retrofitService = retrofit.create(WebService::class.java)
         lateinit var db:AppDatabase
     }
