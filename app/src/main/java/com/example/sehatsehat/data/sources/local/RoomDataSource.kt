@@ -3,6 +3,7 @@ package com.example.sehatsehat.data.sources.local
 import android.util.Log
 import com.example.sehatsehat.model.ChatLogEntity
 import com.example.sehatsehat.model.ProgramEntity
+import com.example.sehatsehat.model.UserEntity
 import java.util.Date
 
 class RoomDataSource(
@@ -83,5 +84,14 @@ class RoomDataSource(
 
     override suspend fun deleteProgram(program: ProgramEntity) {
         db.programDao().delete(program)
+    }
+
+    // user
+    override suspend fun getAllUsers(): List<UserEntity> {
+        return db.userDao().getAllUsers()
+    }
+
+    override suspend fun deleteUser(user: UserEntity) {
+        return db.userDao().deleteUser(user)
     }
 }

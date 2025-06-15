@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -77,7 +78,6 @@ class AdminHomepageActivity : ComponentActivity() {
 
     @Composable
     private fun NavigationSection() {
-        // Gunakan Row agar setiap tombol sejajar; Modifier.weight(1f) membuat lebar sama besar
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -85,26 +85,29 @@ class AdminHomepageActivity : ComponentActivity() {
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             BigNavButton(
-                icon = Icons.Outlined.List,
-                title = "List Program",
-                backgroundColor = Color(0xFF00AA13),
-                onClick = {
-                    // Contoh: startActivity(Intent(this@AdminHomepageActivity, AdminListProgramActivity::class.java))
+                modifier       = Modifier.weight(1f),
+                icon           = Icons.Outlined.List,
+                title          = "List Program",
+                backgroundColor= Color(0xFF00AA13),
+                onClick        = {
+                    startActivity(Intent(this@AdminHomepageActivity, AdminListProgramActivity::class.java))
                 }
             )
             BigNavButton(
-                icon = Icons.Outlined.DateRange,
-                title = "List Artikel",
-                backgroundColor = Color(0xFF00AA13),
-                onClick = {
-                    // Contoh: startActivity(Intent(this@AdminHomepageActivity, AdminListArtikelActivity::class.java))
+                modifier       = Modifier.weight(1f),
+                icon           = Icons.Outlined.DateRange,
+                title          = "List Artikel",
+                backgroundColor= Color(0xFF00AA13),
+                onClick        = {
+                    startActivity(Intent(this@AdminHomepageActivity, AdminListArtikelActivity::class.java))
                 }
             )
             BigNavButton(
-                icon = Icons.Outlined.Person,
-                title = "List User",
-                backgroundColor = Color(0xFF00AA13),
-                onClick = {
+                modifier       = Modifier.weight(1f),
+                icon           = Icons.Outlined.Person,
+                title          = "List User",
+                backgroundColor= Color(0xFF00AA13),
+                onClick        = {
                     startActivity(Intent(this@AdminHomepageActivity, AdminListUserActivity::class.java))
                 }
             )
@@ -113,15 +116,14 @@ class AdminHomepageActivity : ComponentActivity() {
 
     @Composable
     private fun BigNavButton(
-        icon: androidx.compose.ui.graphics.vector.ImageVector,
+        modifier: Modifier = Modifier,        // ← tambahkan parameter
+        icon: ImageVector,
         title: String,
         backgroundColor: Color,
         onClick: () -> Unit
     ) {
-        // Card besar dengan Modifier.weight agar menyesuaikan lebar, dan height tetap
         Card(
-            modifier = Modifier
-//                .weight(1f)
+            modifier = modifier                // ← gunakan modifier di sini
                 .height(160.dp)
                 .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
                 .clickable { onClick() },
@@ -137,7 +139,6 @@ class AdminHomepageActivity : ComponentActivity() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                // Lingkaran hijau di belakang ikon (khas Gojek)
                 Box(
                     modifier = Modifier
                         .size(72.dp)

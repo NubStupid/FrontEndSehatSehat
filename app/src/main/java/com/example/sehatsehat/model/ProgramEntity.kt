@@ -10,5 +10,5 @@ data class ProgramEntity(
     val pricing: Float,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis(),
-    val deletedAt: Long = System.currentTimeMillis()
+    val deletedAt: Long? = System.currentTimeMillis()
 )

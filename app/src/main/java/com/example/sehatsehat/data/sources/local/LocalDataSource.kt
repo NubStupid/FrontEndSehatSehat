@@ -2,6 +2,7 @@ package com.example.sehatsehat.data.sources.local
 
 import com.example.sehatsehat.model.ChatLogEntity
 import com.example.sehatsehat.model.ProgramEntity
+import com.example.sehatsehat.model.UserEntity
 
 interface LocalDataSource {
 //    suspend fun getAll():List<Todo>
@@ -26,4 +27,7 @@ interface LocalDataSource {
     suspend fun updateProgram(program: ProgramEntity)
     suspend fun deleteProgram(program: ProgramEntity)
 
+    // user
+    suspend fun getAllUsers(): List<UserEntity>
+    suspend fun deleteUser(user: UserEntity)
 }

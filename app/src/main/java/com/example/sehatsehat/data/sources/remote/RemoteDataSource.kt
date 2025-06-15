@@ -19,4 +19,8 @@ interface RemoteDataSource {
     suspend fun insertProgram(program: ProgramEntity): ProgramDRO
     suspend fun updateProgram(id: String, program: ProgramEntity): ProgramDRO
     suspend fun deleteProgram(id: String)
+
+    // user
+    suspend fun getAllUsers(): UserListDRO
+    suspend fun deleteUser(username: String)
 }

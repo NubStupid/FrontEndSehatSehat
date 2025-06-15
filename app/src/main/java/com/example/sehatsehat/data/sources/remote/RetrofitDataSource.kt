@@ -60,4 +60,17 @@ class RetrofitDataSource(
             throw RuntimeException("Gagal menghapus program id=$id (status code: ${response.code()})")
         }
     }
+
+    // user
+    override suspend fun getAllUsers(): UserListDRO {
+        return retrofitService.getAllUsers()
+    }
+
+    override suspend fun deleteUser(username: String) {
+        // Panggil endpoint DELETE → Response<Unit>
+        val response: Response<Unit> = retrofitService.deleteUser(username)
+        if (!response.isSuccessful) {
+            throw RuntimeException("Gagal menghapus user username=$username (status code: ${response.code()})")
+        }
+    }
 }

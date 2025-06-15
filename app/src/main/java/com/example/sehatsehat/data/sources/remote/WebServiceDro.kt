@@ -2,6 +2,7 @@ package com.example.sehatsehat.data.sources.remote
 
 import com.example.sehatsehat.model.ChatLogEntity
 import com.example.sehatsehat.model.ProgramEntity
+import com.example.sehatsehat.model.UserEntity
 
 data class ChatBotMessage(
     val response:String
@@ -62,4 +63,9 @@ data class ProgramDRO(
 data class ProgramListDRO(
     val status: Int,
     val programs: List<ProgramEntity>
+)
+
+data class UserListDRO(
+    val status: Int,
+    val users: List<UserEntity>
 )

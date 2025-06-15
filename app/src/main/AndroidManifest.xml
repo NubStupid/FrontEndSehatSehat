@@ -24,15 +24,24 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.admin.AdminListArtikelActivity"
+            android:exported="false"
+            android:label="@string/title_activity_admin_list_artikel"
+            android:theme="@style/Theme.SehatSehat" />
+        <activity
+            android:name=".ui.admin.AdminListProgramActivity"
+            android:exported="false"
+            android:label="@string/title_activity_admin_list_program"
+            android:theme="@style/Theme.SehatSehat" />
+        <activity
             android:name=".ui.admin.AdminListUserActivity"
             android:exported="false"
             android:label="@string/title_activity_admin_list_user"
-            android:theme="@style/Theme.SehatSehat" />
-<!--        <activity-->
-<!--            android:name=".ui.admin.AdminProfileActivity"-->
-<!--            android:exported="false"-->
-<!--            android:label="@string/title_activity_admin_profile"-->
-<!--            android:theme="@style/Theme.SehatSehat" /> &lt;!&ndash; LoginActivity set as the starting activity &ndash;&gt;-->
+            android:theme="@style/Theme.SehatSehat" /> <!-- <activity -->
+        <!-- android:name=".ui.admin.AdminProfileActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:label="@string/title_activity_admin_profile" -->
+        <!-- android:theme="@style/Theme.SehatSehat" /> &lt;!&ndash; LoginActivity set as the starting activity &ndash;&gt; -->
         <activity
             android:name=".ui.LoginActivity"
             android:exported="true"

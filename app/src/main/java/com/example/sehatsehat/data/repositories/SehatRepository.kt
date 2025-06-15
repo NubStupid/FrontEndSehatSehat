@@ -6,6 +6,7 @@ import com.example.sehatsehat.data.sources.remote.RegisterDRO
 import com.example.sehatsehat.data.sources.remote.UserDTO
 import com.example.sehatsehat.model.ChatLogEntity
 import com.example.sehatsehat.model.ProgramEntity
+import com.example.sehatsehat.model.UserEntity
 
 interface SehatRepository{
     suspend fun chatGroupSync(group_id: String)
@@ -30,4 +31,7 @@ interface SehatRepository{
     suspend fun updateProgram(program: ProgramEntity)
     suspend fun deleteProgram(program: ProgramEntity)
 
+//    user crud
+    suspend fun getAllUsers(): List<UserEntity>
+    suspend fun deleteUser(user: UserEntity)
 }

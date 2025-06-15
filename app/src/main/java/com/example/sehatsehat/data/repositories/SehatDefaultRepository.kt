@@ -11,8 +11,11 @@ import com.example.sehatsehat.data.sources.remote.ProgramDRO
 import com.example.sehatsehat.data.sources.remote.ProgramListDRO
 import com.example.sehatsehat.data.sources.remote.RegisterDRO
 import com.example.sehatsehat.data.sources.remote.RemoteDataSource
+import com.example.sehatsehat.data.sources.remote.UserDRO
 import com.example.sehatsehat.data.sources.remote.UserDTO
+import com.example.sehatsehat.data.sources.remote.UserListDRO
 import com.example.sehatsehat.model.ProgramEntity
+import com.example.sehatsehat.model.UserEntity
 
 class SehatDefaultRepository (
     private val localDataSource:LocalDataSource,
@@ -71,6 +74,49 @@ class SehatDefaultRepository (
 
     override suspend fun loginUser(credentials: LoginDTO): LoginDRO {
         return remoteDataSource.loginUser(credentials)
+    }
+
+    //    user crud
+    override suspend fun getAllUsers(): List<UserEntity> {
+        // Cek local pertama
+        val localList = localDataSource.getAllUsers()
+        return if (localList.isNotEmpty()) {
+            localList
+        } else {
+            // Jika kosong, fetch dari server
+            val dro: UserListDRO = remoteDataSource.getAllUsers()
+            val dtoList: List<UserEntity> = dro.users
+            // Simpan semua ke local
+//            dtoList.forEach { localDataSource.insertUser(it) }
+            dtoList
+        }
+    }
+
+//    override suspend fun getUserByUsername(username: String): UserEntity? {
+//        val localProg = localDataSource.getUserByUsername(username)
+//        return if (localProg != null) {
+//            localProg
+//        } else {
+//            val dro: UserDRO = remoteDataSource.getUserByUsername(username)
+//            val userDTO: UserEntity = dro.user ?: return null
+//            localDataSource.insertProgram(userDTO)
+//            userDTO
+//        }
+//    }
+
+//    override suspend fun insertUser(user: UserEntity) {
+//        // Kirim ke server
+//        val dro: UserDRO = remoteDataSource.insertUser(user)
+//        val returned: ProgramEntity = dro.user ?: return
+//        // Simpan versi server (agar ID atau field lain sesuai backend)
+//        localDataSource.insertUser(returned)
+//    }
+
+    override suspend fun deleteUser(user: UserEntity) {
+        // Hapus di server
+        remoteDataSource.deleteUser(user.username)
+        // Hapus di local
+        localDataSource.deleteUser(user)
     }
 
     // ==== (3) Program CRUD ====

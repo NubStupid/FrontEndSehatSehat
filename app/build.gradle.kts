@@ -106,4 +106,7 @@ dependencies {
     // testing multithread
     testImplementation("androidx.arch.core:core-testing:2.1.0")
     androidTestImplementation("io.mockk:mockk-android:1.14.2")
+
+    // Compose integration untuk ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
 }

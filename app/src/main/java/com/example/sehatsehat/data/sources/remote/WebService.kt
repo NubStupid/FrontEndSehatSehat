@@ -75,4 +75,13 @@ interface WebService {
     suspend fun deleteProgram(
         @Path("id") id: String
     ): Response<Unit>
+
+    // user
+    @GET("/api/v1/users")
+    suspend fun getAllUsers(): UserListDRO
+
+    @DELETE("/api/v1/users/{username}")
+    suspend fun deleteUser(
+        @Path("username") username: String
+    ): Response<Unit>
 }
