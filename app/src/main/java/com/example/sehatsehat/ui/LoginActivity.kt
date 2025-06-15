@@ -31,7 +31,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sehatsehat.ui.admin.AdminHomepageActivity
-import com.example.sehatsehat.ui.customer.CustomerHomepageActivity
+import com.example.sehatsehat.ui.customer.HomeActivity
 import com.example.sehatsehat.ui.expert.ExpertHomepageActivity
 import com.example.sehatsehat.ui.theme.SehatSehatTheme
 import com.example.sehatsehat.viewmodel.LoginUiState
@@ -64,7 +64,7 @@ class LoginActivity : ComponentActivity() {
                             "Login customer berhasil! Selamat datang $displayName",
                             Toast.LENGTH_SHORT
                         ).show()
-                        val intent = Intent(this, CustomerHomepageActivity::class.java)
+                        val intent = Intent(this, HomeActivity::class.java)
                         intent.putExtra("display_name", displayName)
                         startActivity(intent)
                         finish()
