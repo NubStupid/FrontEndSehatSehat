@@ -146,7 +146,7 @@ fun ProfileScreen(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     ProfileStatItem(value = "12", label = "Programs")
-                    ProfileStatItem(value = "36", label = "Workouts")
+//                    ProfileStatItem(value = "36", label = "Workouts")
                     ProfileStatItem(value = "98%", label = "Completion")
                 }
             }
@@ -167,17 +167,12 @@ fun ProfileScreen(
 
                 ProfileOptionItem(
                     icon = Icons.Default.Person,
-                    text = "Personal Information",
+                    text = "Update Personal Information",
                     onClick = onEditProfile
                 )
                 ProfileOptionItem(
-                    icon = Icons.Default.Notifications,
-                    text = "Notification Settings",
-                    onClick = { /* Handle notification settings */ }
-                )
-                ProfileOptionItem(
                     icon = Icons.Default.Person,
-                    text = "Privacy Settings",
+                    text = "Top Up",
                     onClick = { /* Handle privacy settings */ }
                 )
 
@@ -192,19 +187,10 @@ fun ProfileScreen(
 
                 ProfileOptionItem(
                     icon = Icons.Default.Build,
-                    text = "Help Center",
+                    text = "Help Center using Chatbot",
                     onClick = { /* Open help center */ }
                 )
-                ProfileOptionItem(
-                    icon = Icons.Default.Phone,
-                    text = "Contact Support",
-                    onClick = { /* Contact support */ }
-                )
-                ProfileOptionItem(
-                    icon = Icons.Default.Info,
-                    text = "About SehatSehat",
-                    onClick = { /* Open about */ }
-                )
+
 
                 Spacer(modifier = Modifier.height(24.dp))
 

@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.sehatsehat.SehatApplication
 import com.example.sehatsehat.data.sources.remote.LoginDRO
 import com.example.sehatsehat.data.sources.remote.LoginDTO
+import com.example.sehatsehat.model.UserEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -18,9 +19,9 @@ import retrofit2.HttpException
 sealed class LoginUiState {
     object Idle : LoginUiState()
     object Loading : LoginUiState()
-    data class SuccessAdmin(val displayName: String) : LoginUiState()
-    data class SuccessCustomer(val displayName: String) : LoginUiState()
-    data class SuccessExpert(val displayName: String) : LoginUiState()
+    data class SuccessAdmin(val user: UserEntity) : LoginUiState()
+    data class SuccessCustomer(val user: UserEntity) : LoginUiState()
+    data class SuccessExpert(val user: UserEntity) : LoginUiState()
     data class Error(val message: String) : LoginUiState()
 }
 
@@ -84,9 +85,9 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                         // Cek role: "admin" atau "customer"
                         val displayName = user.display_name
                         when (user.role) {
-                            "admin" -> uiState = LoginUiState.SuccessAdmin(displayName)
-                            "customer" -> uiState = LoginUiState.SuccessCustomer(displayName)
-                            "expert" -> uiState = LoginUiState.SuccessExpert(displayName)
+                            "admin" -> uiState = LoginUiState.SuccessAdmin(UserEntity(user.username,user.display_name,"",user.dob,user.role,user.pp_url,user.balance,user.createdAt,user.updatedAt))
+                            "customer" -> uiState = LoginUiState.SuccessCustomer(UserEntity(user.username,user.display_name,"",user.dob,user.role,user.pp_url,user.balance,user.createdAt,user.updatedAt))
+                            "expert" -> uiState = LoginUiState.SuccessExpert(UserEntity(user.username,user.display_name,"",user.dob,user.role,user.pp_url,user.balance,user.createdAt,user.updatedAt))
                             else -> uiState = LoginUiState.Error("Role tidak dikenali")
                         }
                     } else {

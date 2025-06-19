@@ -25,7 +25,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -34,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import com.example.sehatsehat.R
 import com.example.sehatsehat.model.Article
 import com.example.sehatsehat.model.FitnessProgram
+import com.example.sehatsehat.model.UserEntity
 import com.example.sehatsehat.ui.theme.SehatSehatTheme
 
 class HomeActivity : ComponentActivity() {
@@ -41,12 +41,12 @@ class HomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val displayName = intent.getStringExtra("display_name") ?: "Hanvy Hendrawan"
+        val activeUser = intent.getParcelableExtra<UserEntity>("active_user")?: UserEntity("","","","","","",0,"","")
 
         setContent {
             SehatSehatTheme {
                 HomeScreen(
-                    displayName = displayName,
+                    displayName = activeUser.display_name,
                     onNavigateToProgram = { program ->
                         startActivity(ViewProgramActivity.newIntent(this, program))
                     },
@@ -54,7 +54,7 @@ class HomeActivity : ComponentActivity() {
                         startActivity(ArticleDetailActivity.newIntent(this, article))
                     },
                     onNavigateToProfile = {
-                        startActivity(ProfileActivity.newIntent(this, displayName))
+                        startActivity(ProfileActivity.newIntent(this, activeUser.display_name))
                     }
                 )
             }
@@ -89,14 +89,12 @@ fun HomeScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(24.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Welcome back,",
-                color = Color.Gray,
-                fontSize = 14.sp
+                text = "",
             )
             IconButton(onClick = onNavigateToProfile) {
                 Icon(
