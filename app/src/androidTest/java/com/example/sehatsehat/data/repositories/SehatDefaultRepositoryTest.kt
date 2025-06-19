@@ -6,6 +6,7 @@ import com.example.sehatsehat.data.sources.remote.RemoteDataSource
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import io.mockk.slot
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 
@@ -16,14 +17,14 @@ class SehatDefaultRepositoryTest {
     lateinit var SehatDefaultRepository:SehatRepository
     lateinit var localDataSource:LocalDataSource
     lateinit var remoteDataSource: RemoteDataSource
-    lateinit var dummyChatStorage: MutableList<ChatLogEntity>
+    lateinit var dummyChatStorage: ArrayList<ChatLogEntity>
 
     @Before
     fun setUp() {
         localDataSource = mockk<LocalDataSource>()
         remoteDataSource = mockk<RemoteDataSource>()
         SehatDefaultRepository = SehatDefaultRepository(localDataSource,remoteDataSource)
-        dummyChatStorage = mutableListOf(
+        dummyChatStorage = arrayListOf(
             ChatLogEntity("CL00001","GC00001","john_doe","Hello, how can I help you today"),
             ChatLogEntity("CL00002","GC00001","john_doe","Hello")
         )
@@ -36,6 +37,7 @@ class SehatDefaultRepositoryTest {
         assertEquals(dummyChatStorage.size,result.size)
         coVerify { localDataSource.getAllChatLog() }
     }
+
 
 
 

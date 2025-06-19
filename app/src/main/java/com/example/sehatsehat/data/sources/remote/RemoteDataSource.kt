@@ -8,6 +8,9 @@ interface RemoteDataSource {
     suspend fun insertChatLog(chatlog:ChatLogDTO):ChatLogDRO
     suspend fun getFromGroupChatLog(group_id:String):ChatLogFromGroupDRO
     suspend fun syncChatGroup(group_id:String, logs:List<ChatLogEntity>):ChatLogFromGroupDRO
+    suspend fun syncProgram():ProgramListDRO
+    suspend fun syncUser():UserListDRO
+    suspend fun syncProgramProgress():ProgramProgressDRO
 
     // ==== Auth / User ====
     suspend fun registerUser(user: UserDTO): RegisterDRO

@@ -1,5 +1,6 @@
 package com.example.sehatsehat.data.repositories
 
+import com.example.sehatsehat.data.sources.remote.DashboardDRO
 import com.example.sehatsehat.data.sources.remote.LoginDRO
 import com.example.sehatsehat.data.sources.remote.LoginDTO
 import com.example.sehatsehat.data.sources.remote.RegisterDRO
@@ -10,6 +11,12 @@ import com.example.sehatsehat.model.UserEntity
 
 interface SehatRepository{
     suspend fun chatGroupSync(group_id: String)
+    suspend fun programSync()
+    suspend fun userSync()
+    suspend fun programProgressSync()
+
+    suspend fun getProgramDashboard():DashboardDRO
+
 
     suspend fun getAllChatLog():List<ChatLogEntity>
     suspend fun getFromGroupChatLog(group_id:String): List<ChatLogEntity>

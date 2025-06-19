@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.example.sehatsehat.viewmodel.AdminHomepageViewModel
 import com.example.sehatsehat.viewmodel.ChatbotViewModel
 
 val SehatViewModelFactory = object : ViewModelProvider.Factory {
@@ -15,6 +16,9 @@ val SehatViewModelFactory = object : ViewModelProvider.Factory {
             when {
                 isAssignableFrom(ChatbotViewModel::class.java) ->
                     ChatbotViewModel(sehatRepository)
+                isAssignableFrom(AdminHomepageViewModel::class.java) ->
+                    AdminHomepageViewModel(sehatRepository)
+
 
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

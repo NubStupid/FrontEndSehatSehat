@@ -6,16 +6,19 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.sehatsehat.dao.ChatLogDao
 import com.example.sehatsehat.dao.ProgramDao
+import com.example.sehatsehat.dao.ProgramProgressDao
 import com.example.sehatsehat.dao.UserDao
 import com.example.sehatsehat.model.ChatLogEntity
 import com.example.sehatsehat.model.ProgramEntity
+import com.example.sehatsehat.model.ProgramProgressEntity
 import com.example.sehatsehat.model.UserEntity
 
-@Database(entities = [ChatLogEntity::class, UserEntity::class, ProgramEntity::class], version = 3)
+@Database(entities = [ChatLogEntity::class, UserEntity::class, ProgramEntity::class,ProgramProgressEntity::class], version = 3)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun chatLogDao(): ChatLogDao
     abstract fun programDao(): ProgramDao
     abstract fun userDao(): UserDao
+    abstract fun programProgressDao():ProgramProgressDao
 
     companion object{
         @Volatile

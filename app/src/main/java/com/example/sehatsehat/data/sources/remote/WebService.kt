@@ -1,6 +1,7 @@
 package com.example.sehatsehat.data.sources.remote
 
 import com.example.sehatsehat.model.ProgramEntity
+import com.example.sehatsehat.model.ProgramProgressEntity
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -38,6 +39,14 @@ interface WebService {
     /**
      * GET semua program. → ProgramListDRO
      */
+
+    @POST("/api/v1/programs/sync")
+    suspend fun syncProgram():ProgramListDRO
+
+    @POST("/api/v1/programs/progress/sync")
+    suspend fun syncProgramProgress():ProgramProgressDRO
+
+
     @GET("/api/v1/programs")
     suspend fun getAllPrograms(): ProgramListDRO
 
@@ -79,6 +88,10 @@ interface WebService {
     // user
     @GET("/api/v1/users")
     suspend fun getAllUsers(): UserListDRO
+
+    @POST("/api/v1/users/sync")
+    suspend fun syncUser(): UserListDRO
+
 
     @DELETE("/api/v1/users/{username}")
     suspend fun deleteUser(

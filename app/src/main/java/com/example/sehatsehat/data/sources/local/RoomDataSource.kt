@@ -1,8 +1,10 @@
 package com.example.sehatsehat.data.sources.local
 
 import android.util.Log
+import com.example.sehatsehat.data.sources.remote.DashboardDRO
 import com.example.sehatsehat.model.ChatLogEntity
 import com.example.sehatsehat.model.ProgramEntity
+import com.example.sehatsehat.model.ProgramProgressEntity
 import com.example.sehatsehat.model.UserEntity
 import java.util.Date
 
@@ -16,6 +18,60 @@ class RoomDataSource(
         for (log in logs){
             db.chatLogDao().insert(log)
         }
+    }
+
+    override suspend fun syncProgram(programs: List<ProgramEntity>) {
+        db.programDao().deleteAll()
+        for (program in programs){
+            db.programDao().insert(program)
+        }
+    }
+
+    override suspend fun syncProgramProgress(progress: List<ProgramProgressEntity>) {
+        db.programProgressDao().deleteAll()
+        for(p in progress ){
+            db.programProgressDao().insert(p)
+        }
+    }
+
+    override suspend fun syncUser(users: List<UserEntity>) {
+        db.userDao().deleteAll()
+        for (user in users){
+            db.userDao().insertUser(user)
+        }
+    }
+
+    override suspend fun getDashboard(): DashboardDRO {
+        val programs = db.programDao().getAllPrograms()
+        val progress = db.programProgressDao().getAllProgramProgress()
+
+        val availablePrograms = arrayListOf<ProgramEntity>()
+        val completedPrograms = arrayListOf<ProgramEntity>()
+        val inProgressPrograms = arrayListOf<ProgramEntity>()
+
+        for (program in programs){
+            var inProgress = false
+            for (progressItem in progress){
+                if (progressItem.program_id == program.id){
+                    inProgress = true
+                    if(progressItem.progress_index == progressItem.progress_list.split(",").size){
+                        completedPrograms.add(program)
+                    }else{
+                        inProgressPrograms.add(program)
+                    }
+                    break
+                }
+                break
+            }
+            if(!inProgress){
+                availablePrograms.add(program)
+            }
+        }
+
+        return DashboardDRO(
+            availablePrograms,
+            completedPrograms,
+            inProgressPrograms)
     }
 
 

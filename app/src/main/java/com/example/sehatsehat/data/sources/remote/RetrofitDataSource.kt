@@ -23,6 +23,18 @@ class RetrofitDataSource(
         return retrofitService.syncChatGroup(SyncChatGroupDTO(group_id,logs))
     }
 
+    override suspend fun syncProgram(): ProgramListDRO {
+        return retrofitService.syncProgram()
+    }
+
+    override suspend fun syncUser(): UserListDRO {
+        return retrofitService.syncUser()
+    }
+
+    override suspend fun syncProgramProgress(): ProgramProgressDRO {
+        return retrofitService.syncProgramProgress()
+    }
+
     // ======================================
     // 2) Auth / User
     // ======================================
@@ -33,6 +45,8 @@ class RetrofitDataSource(
     override suspend fun loginUser(credentials: LoginDTO): LoginDRO {
         return retrofitService.login(credentials)
     }
+
+
 
     // ======================================
     // 3) Program CRUD

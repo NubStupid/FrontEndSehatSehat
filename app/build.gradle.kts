@@ -108,7 +108,7 @@ dependencies {
     // untuk membuat stub
     testImplementation("io.mockk:mockk:1.14.2")
     // testing multithread
-    testImplementation("androidx.arch.core:core-testing:2.1.0")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
     androidTestImplementation("io.mockk:mockk-android:1.14.2")
 
     // Compose integration untuk ViewModel

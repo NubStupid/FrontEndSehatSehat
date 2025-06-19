@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,22 +17,48 @@ import androidx.compose.material.icons.outlined.List
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewmodel.compose.viewModel
+import co.yml.charts.common.extensions.isNotNull
+import co.yml.charts.common.model.PlotType
+import co.yml.charts.ui.piechart.charts.PieChart
+import co.yml.charts.ui.piechart.models.PieChartConfig
+import co.yml.charts.ui.piechart.models.PieChartData
+import com.example.sehatsehat.SehatViewModelFactory
+import com.example.sehatsehat.model.ProgramEntity
 import com.example.sehatsehat.ui.LoginActivity
+import com.example.sehatsehat.viewmodel.AdminHomepageViewModel
 
 class AdminHomepageActivity : ComponentActivity() {
-
+    val vm by viewModels <AdminHomepageViewModel>(){ SehatViewModelFactory }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        vm.init()
         setContent {
+            val completedState:State<Int?> = vm.completedProgramCountLiveData.observeAsState()
+            val ongoingState:State<Int?> = vm.ongoingProgramCountLiveData.observeAsState()
+            val availableState:State<Int?> = vm.availableProgramCountLiveData.observeAsState()
+            val completed = completedState.value
+            val ongoing = ongoingState.value
+            val available = availableState.value
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -39,6 +66,8 @@ class AdminHomepageActivity : ComponentActivity() {
             ) {
                 TopBar()
                 NavigationSection()
+                Text("Program Progress Chart")
+                YChartScreen(completed?:0, ongoing?:0, available?:0)
                 // Jika perlu, tambahkan konten lain di bawah tombol (misalnya daftar program)
             }
         }
@@ -85,30 +114,45 @@ class AdminHomepageActivity : ComponentActivity() {
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             BigNavButton(
-                modifier       = Modifier.weight(1f),
-                icon           = Icons.Outlined.List,
-                title          = "List Program",
-                backgroundColor= Color(0xFF00AA13),
-                onClick        = {
-                    startActivity(Intent(this@AdminHomepageActivity, AdminListProgramActivity::class.java))
+                modifier = Modifier.weight(1f),
+                icon = Icons.Outlined.List,
+                title = "List Program",
+                backgroundColor = Color(0xFF00AA13),
+                onClick = {
+                    startActivity(
+                        Intent(
+                            this@AdminHomepageActivity,
+                            AdminListProgramActivity::class.java
+                        )
+                    )
                 }
             )
             BigNavButton(
-                modifier       = Modifier.weight(1f),
-                icon           = Icons.Outlined.DateRange,
-                title          = "List Artikel",
-                backgroundColor= Color(0xFF00AA13),
-                onClick        = {
-                    startActivity(Intent(this@AdminHomepageActivity, AdminListArtikelActivity::class.java))
+                modifier = Modifier.weight(1f),
+                icon = Icons.Outlined.DateRange,
+                title = "List Artikel",
+                backgroundColor = Color(0xFF00AA13),
+                onClick = {
+                    startActivity(
+                        Intent(
+                            this@AdminHomepageActivity,
+                            AdminListArtikelActivity::class.java
+                        )
+                    )
                 }
             )
             BigNavButton(
-                modifier       = Modifier.weight(1f),
-                icon           = Icons.Outlined.Person,
-                title          = "List User",
-                backgroundColor= Color(0xFF00AA13),
-                onClick        = {
-                    startActivity(Intent(this@AdminHomepageActivity, AdminListUserActivity::class.java))
+                modifier = Modifier.weight(1f),
+                icon = Icons.Outlined.Person,
+                title = "List User",
+                backgroundColor = Color(0xFF00AA13),
+                onClick = {
+                    startActivity(
+                        Intent(
+                            this@AdminHomepageActivity,
+                            AdminListUserActivity::class.java
+                        )
+                    )
                 }
             )
         }
@@ -162,4 +206,67 @@ class AdminHomepageActivity : ComponentActivity() {
             }
         }
     }
+
+
+    @Composable
+    fun YChartScreen(completed:Int, ongoing:Int, available:Int) {
+
+        // 1. Define the data for the pie chart.
+        // We create three slices of equal proportion (1f) to mimic the Y-Chart structure.
+        val pieChartData = PieChartData(
+            slices = listOf(
+                PieChartData.Slice(
+                    label = "Completed",
+                    value = completed.toFloat(), // Equal proportion
+                    color = Color(0xFFB39DDB) // Light Purple
+                ),
+                PieChartData.Slice(
+                    label = "Ongoing",
+                    value = ongoing.toFloat(), // Equal proportion
+                    color = Color(0xFF81C784) // Light Green
+                ),
+                PieChartData.Slice(
+                    label = "Available",
+                    value = available.toFloat(), // Equal proportion
+                    color = Color(0xFF64B5F6) // Light Blue
+                )
+            ),
+            plotType = PlotType.Donut
+            // The plotType can be Donut or Pie.
+        )
+
+        // 2. Configure the appearance of the pie chart.
+        val pieChartConfig = PieChartConfig(
+            // Basic chart properties
+            strokeWidth = 120f,
+            isAnimationEnable = true,
+            animationDuration = 800,
+            showSliceLabels = true,
+            sliceLabelTextSize = 16.sp,
+            sliceLabelTextColor = Color.Black,
+
+            // We disable the legend since our data is displayed directly.
+            isSumVisible = false,
+            isClickOnSliceEnabled = false
+        )
+
+        // 3. Display the chart and the data.
+        // We use a Box to overlay the data points on top of the chart sections.
+        // This part is a bit tricky as we manually place the text.
+        // For a real app, you might calculate positions based on angles.
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            // The PieChart from the library
+            PieChart(
+                modifier = Modifier.fillMaxSize(),
+                pieChartData = pieChartData,
+                pieChartConfig = pieChartConfig
+            )
+        }
+    }
+
 }

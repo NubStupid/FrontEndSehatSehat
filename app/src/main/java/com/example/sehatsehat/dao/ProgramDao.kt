@@ -23,4 +23,8 @@ interface ProgramDao {
 
     @Delete
     suspend fun delete(program: ProgramEntity)
+
+    @Query("DELETE FROM programs")
+    suspend fun deleteAll()
+
 }

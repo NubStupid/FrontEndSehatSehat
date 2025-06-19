@@ -1,7 +1,9 @@
 package com.example.sehatsehat.data.sources.local
 
+import com.example.sehatsehat.data.sources.remote.DashboardDRO
 import com.example.sehatsehat.model.ChatLogEntity
 import com.example.sehatsehat.model.ProgramEntity
+import com.example.sehatsehat.model.ProgramProgressEntity
 import com.example.sehatsehat.model.UserEntity
 
 interface LocalDataSource {
@@ -19,6 +21,12 @@ interface LocalDataSource {
     suspend fun deleteChatLog(id:String): ChatLogEntity
 
     suspend fun syncChatGroup(group_id:String,logs:List<ChatLogEntity>)
+    suspend fun syncProgram(programs:List<ProgramEntity>)
+    suspend fun syncUser(users:List<UserEntity>)
+    suspend fun syncProgramProgress(progress:List<ProgramProgressEntity>)
+
+
+    suspend fun getDashboard(): DashboardDRO
 
     // Program
     suspend fun getAllPrograms(): List<ProgramEntity>

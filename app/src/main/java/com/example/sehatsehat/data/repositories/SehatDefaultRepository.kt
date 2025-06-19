@@ -5,6 +5,7 @@ import com.example.sehatsehat.model.ChatLogEntity
 import com.example.sehatsehat.data.sources.local.LocalDataSource
 import com.example.sehatsehat.data.sources.remote.ChatBotDTO
 import com.example.sehatsehat.data.sources.remote.ChatLogDTO
+import com.example.sehatsehat.data.sources.remote.DashboardDRO
 import com.example.sehatsehat.data.sources.remote.LoginDRO
 import com.example.sehatsehat.data.sources.remote.LoginDTO
 import com.example.sehatsehat.data.sources.remote.ProgramDRO
@@ -16,6 +17,7 @@ import com.example.sehatsehat.data.sources.remote.UserDTO
 import com.example.sehatsehat.data.sources.remote.UserListDRO
 import com.example.sehatsehat.model.ProgramEntity
 import com.example.sehatsehat.model.UserEntity
+import com.example.sehatsehat.ui.customer.ProfileActivity
 
 class SehatDefaultRepository (
     private val localDataSource:LocalDataSource,
@@ -30,13 +32,32 @@ class SehatDefaultRepository (
         localDataSource.syncChatGroup(group_id,serverChatGroup.chats)
     }
 
+    override suspend fun programSync() {
+        val serverProgram = remoteDataSource.syncProgram()
+        localDataSource.syncProgram(serverProgram.programs)
+    }
+
+    override suspend fun userSync() {
+        val serverUser = remoteDataSource.syncUser()
+        localDataSource.syncUser(serverUser.users)
+    }
+
+    override suspend fun programProgressSync() {
+        val serverProgress = remoteDataSource.syncProgramProgress()
+        localDataSource.syncProgramProgress(serverProgress.progress)
+    }
+
+    override suspend fun getProgramDashboard(): DashboardDRO {
+        val dro = localDataSource.getDashboard()
+        return dro
+    }
+
     override suspend fun getAllChatLog(): List<ChatLogEntity> {
         return localDataSource.getAllChatLog()
     }
 
     override suspend fun deleteChatLog(id: String) {
         val chatlog = localDataSource.deleteChatLog(id)
-
     }
 
     override suspend fun getFromChatbotChatLog(username: String): List<ChatLogEntity> {

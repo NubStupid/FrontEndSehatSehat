@@ -2,6 +2,7 @@ package com.example.sehatsehat.data.sources.remote
 
 import com.example.sehatsehat.model.ChatLogEntity
 import com.example.sehatsehat.model.ProgramEntity
+import com.example.sehatsehat.model.ProgramProgressEntity
 import com.example.sehatsehat.model.UserEntity
 
 data class ChatBotMessage(
@@ -68,4 +69,15 @@ data class ProgramListDRO(
 data class UserListDRO(
     val status: Int,
     val users: List<UserEntity>
+)
+
+data class DashboardDRO(
+    val available:List<ProgramEntity>,
+    val ongoing:List<ProgramEntity>,
+    val completed:List<ProgramEntity>
+)
+
+data class ProgramProgressDRO(
+    val status: Int,
+    val progress:List<ProgramProgressEntity>
 )
