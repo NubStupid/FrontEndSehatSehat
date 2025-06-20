@@ -96,6 +96,7 @@ class RoomDataSource(
     }
 
     override suspend fun getFromGroupChatLog(group_id: String): List<ChatLogEntity> {
+        Log.d("test",group_id)
         return db.chatLogDao().getChatFromGroup(group_id)
     }
 

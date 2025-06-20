@@ -45,6 +45,11 @@ class ChatbotViewModel(
     fun chatbotSync(chatGroup:String){
         viewModelScope.launch {
             sehatRepository.chatGroupSync(chatGroup)
+            if(username.value != null){
+                _chatMessages.value = sehatRepository.getFromChatbotChatLog(username.value).sortedByDescending{
+                    it.createdAt
+                }
+            }
         }
     }
 

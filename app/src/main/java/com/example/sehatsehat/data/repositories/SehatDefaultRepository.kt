@@ -26,6 +26,7 @@ class SehatDefaultRepository (
 ):SehatRepository{
 
     override suspend fun chatGroupSync(group_id: String) {
+        Log.d("Test_Sync_group_id",group_id)
         val clientChatGroup = localDataSource.getFromGroupChatLog(group_id)
         Log.d("Test_Sync_clientCG",clientChatGroup.size.toString())
         val serverChatGroup = remoteDataSource.syncChatGroup(group_id,clientChatGroup)

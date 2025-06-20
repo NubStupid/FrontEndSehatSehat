@@ -44,6 +44,7 @@ import java.util.Date
 import kotlin.text.isNotBlank
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.text.style.TextOverflow
+import com.example.sehatsehat.model.UserEntity
 import com.example.sehatsehat.viewmodel.ChatbotViewModel
 
 class ChatbotActivity : ComponentActivity() {
@@ -51,25 +52,32 @@ class ChatbotActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        vm.init("john_doe", "john_doe_chatbot")
-        enableEdgeToEdge()
-        setContent {
-            ChatScreen(messages = vm.chatMessages.value ?: emptyList()) {}
+        val activeUser = intent.getParcelableExtra<UserEntity>("active_user")
+        if(activeUser != null){
+            vm.init(activeUser.username, activeUser.username+"_chatbot")
+            enableEdgeToEdge()
+            setContent {
+                ChatScreen(messages = vm.chatMessages.value ?: emptyList()) {}
 
+            }
         }
     }
 
     @Composable
     fun ChatScreen(messages: List<ChatLogEntity>, onSendMessage: (String) -> Unit) {
         val chatMessages by vm.chatMessages.observeAsState(emptyList())
+        val chatGroup by vm.chatGroup.observeAsState("")
+
         LaunchedEffect(key1 = Unit) {
-            Log.d("DQWD",vm.chatGroup.value!!)
-            vm.chatbotSync(vm.chatGroup.value!!)
+            Log.d("DQWD",chatGroup)
+            vm.chatbotSync(chatGroup)
         }
         Scaffold(
             topBar = {
                 ChatbotTopAppBar(
-                    onNavigationIconClick = {}
+                    onNavigationIconClick = {
+                        finish()
+                    }
                 )
             }
         ) { innerPadding ->
@@ -239,8 +247,9 @@ class ChatbotActivity : ComponentActivity() {
                     IconButton(onClick = onClick) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack, // Or Icons.Filled.Menu
-                            contentDescription = "Navigation Icon" // "Back" or "Open navigation menu"
+                            contentDescription = "Navigation Icon", // "Back" or "Open navigation menu"
                         )
+
                     }
                 }
             },

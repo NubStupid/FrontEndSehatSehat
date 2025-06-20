@@ -31,7 +31,7 @@ class ProfileViewModel(
             _activeUser.value = user
 //            val sdf = SimpleDateFormat("dd MM yyyy", java.util.Locale.getDefault())
 //            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", java.util.Locale.ENGLISH)
-            _memberSince.value = "Member since ${user.createdAt}"
+            _memberSince.value = "Member since ${user.createdAt.split("T").get(0)}"
 //
             val programList = sehatRepository.getProgramByUser(user.username)
             _programAssigned.value = programList.size

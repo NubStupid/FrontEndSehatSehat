@@ -152,9 +152,10 @@ class ProfileActivity : ComponentActivity() {
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold
                         )
-
+                        val memberSince:State<String?> = vm.memberSince.observeAsState()
+                        val since = memberSince.value
                         Text(
-                            text = "Member since June 2023",
+                            text = since.toString(),
                             fontSize = 14.sp,
                             color = Color.Gray
                         )

@@ -42,6 +42,7 @@ import co.yml.charts.ui.piechart.models.PieChartConfig
 import co.yml.charts.ui.piechart.models.PieChartData
 import com.example.sehatsehat.SehatViewModelFactory
 import com.example.sehatsehat.model.ProgramEntity
+import com.example.sehatsehat.model.UserEntity
 import com.example.sehatsehat.ui.LoginActivity
 import com.example.sehatsehat.ui.customer.ChatbotActivity
 import com.example.sehatsehat.viewmodel.AdminHomepageViewModel
@@ -52,24 +53,28 @@ class AdminHomepageActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         vm.init()
-        setContent {
-            val completedState:State<Int?> = vm.completedProgramCountLiveData.observeAsState()
-            val ongoingState:State<Int?> = vm.ongoingProgramCountLiveData.observeAsState()
-            val availableState:State<Int?> = vm.availableProgramCountLiveData.observeAsState()
-            val completed = completedState.value
-            val ongoing = ongoingState.value
-            val available = availableState.value
+        val activeUser = intent.getParcelableExtra<UserEntity>("active_user")
+        if(activeUser != null){
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
-            ) {
-                TopBar()
-                NavigationSection()
-                Text("Program Progress Chart")
-                YChartScreen(completed?:0, ongoing?:0, available?:0)
-                // Jika perlu, tambahkan konten lain di bawah tombol (misalnya daftar program)
+            setContent {
+                val completedState:State<Int?> = vm.completedProgramCountLiveData.observeAsState()
+                val ongoingState:State<Int?> = vm.ongoingProgramCountLiveData.observeAsState()
+                val availableState:State<Int?> = vm.availableProgramCountLiveData.observeAsState()
+                val completed = completedState.value
+                val ongoing = ongoingState.value
+                val available = availableState.value
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background)
+                ) {
+                    TopBar()
+                    NavigationSection(activeUser)
+                    Text("Program Progress Chart")
+                    YChartScreen(completed?:0, ongoing?:0, available?:0)
+                    // Jika perlu, tambahkan konten lain di bawah tombol (misalnya daftar program)
+                }
             }
         }
     }
@@ -107,7 +112,7 @@ class AdminHomepageActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun NavigationSection() {
+    private fun NavigationSection(user:UserEntity) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -134,11 +139,13 @@ class AdminHomepageActivity : ComponentActivity() {
                 title = "Chatbot",
                 backgroundColor = Color(0xFF00AA13),
                 onClick = {
+                    val intent = Intent(
+                        this@AdminHomepageActivity,
+                        ChatbotActivity::class.java
+                    )
+                    intent.putExtra("active_user",user)
                     startActivity(
-                        Intent(
-                            this@AdminHomepageActivity,
-                            ChatbotActivity::class.java
-                        )
+                        intent
                     )
                 }
             )
