@@ -68,11 +68,7 @@ class RetrofitDataSource(
     }
 
     override suspend fun deleteProgram(id: String) {
-        // Panggil endpoint DELETE → Response<Unit>
-        val response: Response<Unit> = retrofitService.deleteProgram(id)
-        if (!response.isSuccessful) {
-            throw RuntimeException("Gagal menghapus program id=$id (status code: ${response.code()})")
-        }
+        val response: Unit = retrofitService.deleteProgram(id)
     }
 
     // user

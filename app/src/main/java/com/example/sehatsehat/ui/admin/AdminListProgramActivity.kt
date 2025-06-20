@@ -1,5 +1,6 @@
 package com.example.sehatsehat.ui.admin
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,68 +22,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.sehatsehat.SehatApplication
-import com.example.sehatsehat.data.sources.remote.ProgramListDRO
 import com.example.sehatsehat.model.ProgramEntity
 import com.example.sehatsehat.ui.admin.ui.theme.SehatSehatTheme
-import kotlinx.coroutines.launch
+import com.example.sehatsehat.viewmodel.AdminListProgramViewModel
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
-
-// ViewModel untuk Program List
-class AdminProgramListViewModel : ViewModel() {
-    private val _programs = mutableStateOf<List<ProgramEntity>>(emptyList())
-    val programs: State<List<ProgramEntity>> = _programs
-
-    private val _isLoading = mutableStateOf(false)
-    val isLoading: State<Boolean> = _isLoading
-
-    private val _error = mutableStateOf<String?>(null)
-    val error: State<String?> = _error
-
-    init {
-        fetchPrograms()
-    }
-
-    fun fetchPrograms() {
-        viewModelScope.launch {
-            _isLoading.value = true
-            _error.value = null
-            try {
-                // Panggilan API ke retrofitService yang mengembalikan ProgramListDRO
-                val dro: ProgramListDRO = SehatApplication.retrofitService.getAllPrograms()
-                // Assign hasil dro.programs ke state
-                _programs.value = dro.programs
-            } catch (e: Exception) {
-                // Tangani error—tampilkan pesan ke UI
-                _error.value = e.localizedMessage ?: "Unknown error"
-            } finally {
-                _isLoading.value = false
-            }
-        }
-    }
-
-    fun deleteProgram(programId: String) {
-        viewModelScope.launch {
-            try {
-                // Contoh delete: panggil API delete, lalu refresh list
-                SehatApplication.retrofitService.deleteProgram(programId)
-                fetchPrograms()
-            } catch (e: Exception) {
-                _error.value = e.localizedMessage ?: "Failed to delete"
-            }
-        }
-    }
-}
 
 class AdminListProgramActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,8 +47,16 @@ class AdminListProgramActivity : ComponentActivity() {
             SehatSehatTheme {
                 AdminProgramListScreen(
                     onBackClick = { finish() },
-                    onAddClick = { /* Navigate to add program */ },
-                    onEditClick = { programId -> /* Navigate to edit program */ }
+                    onAddClick = {
+                        startActivity(
+                            Intent(this, AdminAddProgramActivity::class.java)
+                        )
+                    },
+                    onEditClick = { programId ->
+                        val intent = Intent(this, AdminEditProgramActivity::class.java)
+                        intent.putExtra("PROGRAM_ID", programId)
+                        startActivity(intent)
+                    }
                 )
             }
         }
@@ -116,11 +79,27 @@ fun AdminProgramListScreen(
     onBackClick: () -> Unit,
     onAddClick: () -> Unit,
     onEditClick: (String) -> Unit,
-    adminVm: AdminProgramListViewModel = viewModel()
+    adminVm: AdminListProgramViewModel = viewModel()
 ) {
-    val programs by adminVm.programs
-    val isLoading by adminVm.isLoading
-    val error by adminVm.error
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    // Observe lifecycle untuk refresh data saat kembali dari edit
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                adminVm.fetchPrograms()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    val programs = adminVm.programs
+    val isLoading = adminVm.isLoading
+    val error = adminVm.errorMessage
 
     Scaffold(
         topBar = {
@@ -168,7 +147,7 @@ fun AdminProgramListScreen(
                         }
                     }
                 }
-                programs.isEmpty() -> {
+                programs.isEmpty() && !isLoading && error == null -> {
                     Text("Tidak ada program ditemukan", modifier = Modifier.align(Alignment.Center))
                 }
                 else -> {
@@ -204,13 +183,15 @@ fun ProgramCard(
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
             title = { Text("Konfirmasi Hapus") },
-            text = { Text("Apakah Anda yakin ingin menghapus program ini?") },
+            text = { Text("Apakah Anda yakin ingin menghapus program '${program.program_name}'?") },
             confirmButton = {
-                TextButton(onClick = {
-                    onDeleteClick()
-                    showDeleteDialog = false
-                }) {
-                    Text("Hapus")
+                TextButton(
+                    onClick = {
+                        onDeleteClick()
+                        showDeleteDialog = false
+                    }
+                ) {
+                    Text("Hapus", color = MaterialTheme.colorScheme.error)
                 }
             },
             dismissButton = {
@@ -250,7 +231,7 @@ fun ProgramCard(
                         text = program.program_name,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                        maxLines = 1,
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
@@ -259,7 +240,7 @@ fun ProgramCard(
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                     )
                     Text(
-                        "Dibuat: ${formatDate(program.createdAt)}",
+                        "Dibuat: ${program.createdAt}",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                     )
@@ -282,7 +263,12 @@ fun ProgramCard(
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                OutlinedButton(onClick = onEditClick) {
+                OutlinedButton(
+                    onClick = onEditClick,
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
                     Icon(Icons.Default.Edit, contentDescription = "Edit")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Edit")

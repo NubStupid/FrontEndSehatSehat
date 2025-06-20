@@ -13,7 +13,7 @@ import com.example.sehatsehat.model.ProgramEntity
 import com.example.sehatsehat.model.ProgramProgressEntity
 import com.example.sehatsehat.model.UserEntity
 
-@Database(entities = [ChatLogEntity::class, UserEntity::class, ProgramEntity::class,ProgramProgressEntity::class], version = 3)
+@Database(entities = [ChatLogEntity::class, UserEntity::class, ProgramEntity::class,ProgramProgressEntity::class], version = 6)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun chatLogDao(): ChatLogDao
     abstract fun programDao(): ProgramDao

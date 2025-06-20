@@ -1,6 +1,7 @@
 package com.example.sehatsehat.ui.admin
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -18,82 +19,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.sehatsehat.SehatApplication
-import com.example.sehatsehat.data.sources.remote.UserListDRO
 import com.example.sehatsehat.model.UserEntity
 import com.example.sehatsehat.ui.admin.ui.theme.SehatSehatTheme
-import kotlinx.coroutines.launch
+import com.example.sehatsehat.viewmodel.AdminUserListViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-// ViewModel untuk User List
-data class UiState(
-    val users: List<UserEntity> = emptyList(),
-    val isLoading: Boolean = false,
-    val error: String? = null
-)
-
-class AdminUserListViewModel : ViewModel() {
-    var uiState by mutableStateOf(UiState())
-        private set
-
-    init {
-        fetchUsers()
-    }
-
-    fun fetchUsers() {
-        viewModelScope.launch {
-            uiState = uiState.copy(isLoading = true, error = null)
-            try {
-                val dro: UserListDRO = SehatApplication.retrofitService.getAllUsers()
-                uiState = uiState.copy(users = dro.users)
-            } catch (e: Exception) {
-                uiState = uiState.copy(error = e.localizedMessage ?: "Unknown error")
-            } finally {
-                uiState = uiState.copy(isLoading = false)
-            }
-        }
-    }
-
-    fun deleteUser(username: String) {
-        viewModelScope.launch {
-            uiState = uiState.copy(isLoading = true, error = null)
-            try {
-                val response = SehatApplication.retrofitService.deleteUser(username)
-                if (response.isSuccessful) {
-                    fetchUsers()
-                } else {
-                    uiState = uiState.copy(error = "Gagal menghapus: ${response.code()}")
-                }
-            } catch (e: Exception) {
-                uiState = uiState.copy(error = e.localizedMessage ?: "Unknown error")
-            } finally {
-                uiState = uiState.copy(isLoading = false)
-            }
-        }
-    }
-
-    fun updateUserRole(username: String, newRole: String) {
-        viewModelScope.launch {
-            // TODO: panggil API update role jika ada
-            uiState = uiState.copy(
-                users = uiState.users.map { user ->
-                    if (user.username == username) user.copy(role = newRole) else user
-                }
-            )
-        }
-    }
-}
-
-// Activity + Screen + Composables
 class AdminListUserActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,11 +49,22 @@ fun AdminUserListScreen(
     onBackClick: () -> Unit,
     viewModel: AdminUserListViewModel = viewModel()
 ) {
-    val (users, isLoading, error) = remember { derivedStateOf { Triple(
-        viewModel.uiState.users,
-        viewModel.uiState.isLoading,
-        viewModel.uiState.error
-    ) } }.value
+    val context = LocalContext.current
+    val uiState = viewModel.uiState
+
+    // Show success or error messages
+    LaunchedEffect(uiState.successMessage) {
+        uiState.successMessage?.let { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            viewModel.clearMessages()
+        }
+    }
+
+    LaunchedEffect(uiState.error) {
+        uiState.error?.let { error ->
+            Toast.makeText(context, error, Toast.LENGTH_LONG).show()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -136,10 +84,58 @@ fun AdminUserListScreen(
                 .padding(paddingValues)
         ) {
             when {
-                isLoading -> CircularProgressIndicator(Modifier.align(Alignment.Center))
-                error != null -> ErrorView(error!!) { viewModel.fetchUsers() }
-                users.isEmpty() -> Text("Tidak ada user", Modifier.align(Alignment.Center))
-                else -> UserList(users, onRoleChange = { r -> viewModel.updateUserRole(r.first, r.second) }, onDelete = { viewModel.deleteUser(it) })
+                uiState.isLoading -> {
+                    CircularProgressIndicator(Modifier.align(Alignment.Center))
+                }
+                uiState.error != null && uiState.users.isEmpty() -> {
+                    ErrorView(uiState.error) { viewModel.fetchUsers() }
+                }
+                uiState.users.isEmpty() -> {
+                    Text("Tidak ada user", Modifier.align(Alignment.Center))
+                }
+                else -> {
+                    UserList(
+                        users = uiState.users,
+                        onRoleChange = { username, newRole ->
+                            viewModel.updateUserRole(username, newRole)
+                        },
+                        onDelete = { username ->
+                            viewModel.deleteUser(username)
+                        },
+                        isUpdatingRole = uiState.isUpdatingRole,
+                        isDeleting = uiState.isDeleting
+                    )
+                }
+            }
+
+            // Show loading overlay when updating role or deleting
+            if (uiState.isUpdatingRole || uiState.isDeleting) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.3f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Card(
+                        modifier = Modifier.padding(16.dp),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Text(
+                                text = when {
+                                    uiState.isUpdatingRole -> "Mengubah role..."
+                                    uiState.isDeleting -> "Menghapus user..."
+                                    else -> "Memproses..."
+                                }
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -148,27 +144,42 @@ fun AdminUserListScreen(
 @Composable
 fun ErrorView(message: String, onRetry: () -> Unit) {
     Column(
-//        Modifier.align(Alignment.CenterHorizontally),
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Error: $message", color = MaterialTheme.colorScheme.error)
+        Text(
+            text = "Error: $message",
+            color = MaterialTheme.colorScheme.error,
+            modifier = Modifier.padding(16.dp)
+        )
         Spacer(Modifier.height(12.dp))
-        Button(onClick = onRetry) { Text("Coba Lagi") }
+        Button(onClick = onRetry) {
+            Text("Coba Lagi")
+        }
     }
 }
 
 @Composable
 fun UserList(
     users: List<UserEntity>,
-    onRoleChange: (Pair<String, String>) -> Unit,
-    onDelete: (String) -> Unit
+    onRoleChange: (String, String) -> Unit,
+    onDelete: (String) -> Unit,
+    isUpdatingRole: Boolean,
+    isDeleting: Boolean
 ) {
     LazyColumn(
-        Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items(users) { user ->
-            UserCard(user, onRoleChange = { newRole -> onRoleChange(user.username to newRole) }, onDelete = onDelete)
+            UserCard(
+                user = user,
+                onRoleChange = { newRole -> onRoleChange(user.username, newRole) },
+                onDelete = { onDelete(user.username) },
+                isProcessing = isUpdatingRole || isDeleting
+            )
         }
     }
 }
@@ -177,7 +188,8 @@ fun UserList(
 fun UserCard(
     user: UserEntity,
     onRoleChange: (String) -> Unit,
-    onDelete: (String) -> Unit
+    onDelete: () -> Unit,
+    isProcessing: Boolean
 ) {
     var showRoleDialog by remember { mutableStateOf(false) }
     var showConfirmDelete by remember { mutableStateOf(false) }
@@ -191,62 +203,171 @@ fun UserCard(
         Column(Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    Icons.Default.Person, null,
-                    Modifier
+                    Icons.Default.Person,
+                    contentDescription = null,
+                    modifier = Modifier
                         .size(40.dp)
-                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f), RoundedCornerShape(20.dp))
+                        .background(
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                            RoundedCornerShape(20.dp)
+                        )
                         .padding(8.dp)
                 )
                 Spacer(Modifier.width(12.dp))
                 Column(Modifier.weight(1f)) {
-                    Text(user.display_name, fontWeight = FontWeight.Bold, fontSize = 16.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    Text("@${user.username}", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
-                    Text("Bergabung: ${formatDate(user.createdAt.toLong())}", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f))
+                    Text(
+                        text = user.display_name,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = "@${user.username}",
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    )
+                    Text(
+                        text = "Bergabung: ${formatDate(user.createdAt.toLong())}",
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                    )
                 }
                 RoleChip(user.role)
             }
+
             Spacer(Modifier.height(12.dp))
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedButton({ showRoleDialog = true }, Modifier.weight(1f)) { Text("Ubah Role") }
-                OutlinedButton({ showConfirmDelete = true }, Modifier.weight(1f), colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Red)) { Text("Hapus") }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OutlinedButton(
+                    onClick = { showRoleDialog = true },
+                    modifier = Modifier.weight(1f),
+                    enabled = !isProcessing
+                ) {
+                    Text("Ubah Role")
+                }
+                OutlinedButton(
+                    onClick = { showConfirmDelete = true },
+                    modifier = Modifier.weight(1f),
+                    enabled = !isProcessing,
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = Color.Red
+                    )
+                ) {
+                    Text("Hapus")
+                }
             }
         }
     }
 
-    if (showRoleDialog) RoleDialog(user.role, onSelect = { onRoleChange(it); showRoleDialog = false }, onDismiss = { showRoleDialog = false })
-    if (showConfirmDelete) ConfirmDeleteDialog(user.username, onConfirm = { onDelete(user.username); showConfirmDelete = false }, onCancel = { showConfirmDelete = false })
-}
+    if (showRoleDialog) {
+        RoleDialog(
+            currentRole = user.role,
+            onSelect = { newRole ->
+                onRoleChange(newRole)
+                showRoleDialog = false
+            },
+            onDismiss = { showRoleDialog = false }
+        )
+    }
 
-@Composable fun RoleChip(role: String) = Surface(
-    color = when(role){"admin"->Color.Red.copy(.1f)"trainer"->Color.Blue.copy(.1f)else->Color.Green.copy(.1f)},
-    shape=RoundedCornerShape(16.dp),modifier=Modifier.padding(start=8.dp)){
-    Text(role.uppercase(), Modifier.padding(8.dp,4.dp), fontSize=12.sp, fontWeight=FontWeight.Medium,
-        color=when(role){"admin"->Color.Red "trainer"->Color.Blue else->Color.Green})
+    if (showConfirmDelete) {
+        ConfirmDeleteDialog(
+            username = user.username,
+            onConfirm = {
+                onDelete()
+                showConfirmDelete = false
+            },
+            onCancel = { showConfirmDelete = false }
+        )
+    }
 }
 
 @Composable
-fun RoleDialog(current: String, onSelect: (String)->Unit, onDismiss: ()->Unit) {
-    AlertDialog(onDismissRequest=onDismiss,title={Text("Pilih Role")},text={Column{listOf("customer","trainer","admin").forEach{role->Row(Modifier.fillMaxWidth().padding(vertical=4.dp),verticalAlignment=Alignment.CenterVertically){RadioButton(selected=current==role,onClick={onSelect(role)});Spacer(Modifier.width(8.dp));Text(role.replaceFirstChar{it.uppercase()})}}}},confirmButton={TextButton(onClick=onDismiss){Text("Batal")}})
+fun RoleChip(role: String) {
+    Surface(
+        color = when(role) {
+            "admin" -> Color.Red.copy(0.1f)
+            "trainer" -> Color.Blue.copy(0.1f)
+            else -> Color.Green.copy(0.1f)
+        },
+        shape = RoundedCornerShape(16.dp),
+        modifier = Modifier.padding(start = 8.dp)
+    ) {
+        Text(
+            text = role.uppercase(),
+            modifier = Modifier.padding(8.dp, 4.dp),
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Medium,
+            color = when(role) {
+                "admin" -> Color.Red
+                "trainer" -> Color.Blue
+                else -> Color.Green
+            }
+        )
+    }
 }
 
 @Composable
-fun ConfirmDeleteDialog(username:String,onConfirm:()->Unit,onCancel:()->Unit){
+fun RoleDialog(
+    currentRole: String,
+    onSelect: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val roles = listOf("customer", "trainer", "admin")
+
     AlertDialog(
-        onDismissRequest=onCancel,
-        title={Text("Konfirmasi Hapus")},
-        text={Text("Yakin hapus user @$username?")},
-        confirmButton={TextButton(onClick=onConfirm){Text("Hapus",color=Color.Red)}},
-        dismissButton={TextButton(onClick=onCancel){Text("Batal")}}
+        onDismissRequest = onDismiss,
+        title = { Text("Pilih Role") },
+        text = {
+            Column {
+                roles.forEach { role ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = currentRole == role,
+                            onClick = { onSelect(role) }
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(role.replaceFirstChar { it.uppercase() })
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Batal")
+            }
+        }
     )
 }
 
-//fun formatDate(timestamp: Long): String {
-//    val sdf = SimpleDateFormat("dd MMM yyyy", Locale("id"))
-//    return sdf.format(Date(timestamp))
-//}
-
-@Preview(showBackground = true)
 @Composable
-fun AdminUserListPreview() {
-    SehatSehatTheme { AdminUserListScreen(onBackClick = {}) }
+fun ConfirmDeleteDialog(
+    username: String,
+    onConfirm: () -> Unit,
+    onCancel: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onCancel,
+        title = { Text("Konfirmasi Hapus") },
+        text = { Text("Yakin hapus user @$username?") },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text("Hapus", color = Color.Red)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onCancel) {
+                Text("Batal")
+            }
+        }
+    )
 }

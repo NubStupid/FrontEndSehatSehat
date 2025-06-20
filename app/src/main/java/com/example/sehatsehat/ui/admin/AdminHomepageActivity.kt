@@ -43,6 +43,7 @@ import co.yml.charts.ui.piechart.models.PieChartData
 import com.example.sehatsehat.SehatViewModelFactory
 import com.example.sehatsehat.model.ProgramEntity
 import com.example.sehatsehat.ui.LoginActivity
+import com.example.sehatsehat.ui.customer.ChatbotActivity
 import com.example.sehatsehat.viewmodel.AdminHomepageViewModel
 
 class AdminHomepageActivity : ComponentActivity() {
@@ -130,13 +131,13 @@ class AdminHomepageActivity : ComponentActivity() {
             BigNavButton(
                 modifier = Modifier.weight(1f),
                 icon = Icons.Outlined.DateRange,
-                title = "List Artikel",
+                title = "Chatbot",
                 backgroundColor = Color(0xFF00AA13),
                 onClick = {
                     startActivity(
                         Intent(
                             this@AdminHomepageActivity,
-                            AdminListArtikelActivity::class.java
+                            ChatbotActivity::class.java
                         )
                     )
                 }
@@ -151,6 +152,20 @@ class AdminHomepageActivity : ComponentActivity() {
                         Intent(
                             this@AdminHomepageActivity,
                             AdminListUserActivity::class.java
+                        )
+                    )
+                }
+            )
+            BigNavButton(
+                modifier = Modifier.weight(1f),
+                icon = Icons.Outlined.DateRange,
+                title = "Report",
+                backgroundColor = Color(0xFF00AA13),
+                onClick = {
+                    startActivity(
+                        Intent(
+                            this@AdminHomepageActivity,
+                            AdminReportActivity::class.java
                         )
                     )
                 }

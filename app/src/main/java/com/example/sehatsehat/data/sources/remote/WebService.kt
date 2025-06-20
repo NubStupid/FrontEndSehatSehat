@@ -1,7 +1,10 @@
 package com.example.sehatsehat.data.sources.remote
 
+import com.example.sehatsehat.model.MealEntity
 import com.example.sehatsehat.model.ProgramEntity
 import com.example.sehatsehat.model.ProgramProgressEntity
+import com.example.sehatsehat.model.ReportItem
+import com.example.sehatsehat.model.WorkoutEntity
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -81,9 +84,7 @@ interface WebService {
      * DELETE program per ID. Response: empty (Response<Unit>).
      */
     @DELETE("/api/v1/programs/{id}")
-    suspend fun deleteProgram(
-        @Path("id") id: String
-    ): Response<Unit>
+    suspend fun deleteProgram(@Path("id") id: String): Unit
 
     // user
     @GET("/api/v1/users")
@@ -97,4 +98,29 @@ interface WebService {
     suspend fun deleteUser(
         @Path("username") username: String
     ): Response<Unit>
+
+    @POST("/meals")
+    suspend fun insertMeal(@Body meal: MealEntity): Response<Unit>
+
+    @POST("/workouts")
+    suspend fun insertWorkout(@Body workout: WorkoutEntity): Response<Unit>
+
+    @GET("/api/v1/programs/{program_id}/meals")
+    suspend fun getMealsByProgramId(
+        @Path("program_id") programId: String
+    ): MealListDRO
+
+    @GET("/api/v1/programs/{program_id}/workouts")
+    suspend fun getWorkoutsByProgramId(
+        @Path("program_id") programId: String
+    ): WorkoutListDRO
+
+    @PUT("/api/v1/users/{username}/{role}")
+    suspend fun updateUserRole(
+        @Path("username") username: String,
+        @Path("role") role: String
+    ): UpdateRoleResponse
+
+    @GET("/api/v1/reports/monthly-purchases")
+    suspend fun getMonthlyReport(): Response<List<ReportItem>>
 }

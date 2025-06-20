@@ -1,9 +1,11 @@
 package com.example.sehatsehat.data.sources.remote
 
 import com.example.sehatsehat.model.ChatLogEntity
+import com.example.sehatsehat.model.MealEntity
 import com.example.sehatsehat.model.ProgramEntity
 import com.example.sehatsehat.model.ProgramProgressEntity
 import com.example.sehatsehat.model.UserEntity
+import com.example.sehatsehat.model.WorkoutEntity
 
 data class ChatBotMessage(
     val response:String
@@ -45,7 +47,8 @@ data class RegisterResponse(
 
 data class ProgramDRO(
     val status: Int,
-    val message: String,
+    val message: String? = null,
+    val error: String? = null,
     val program: ProgramEntity? = null
 )
 
@@ -80,4 +83,25 @@ data class DashboardDRO(
 data class ProgramProgressDRO(
     val status: Int,
     val progress:List<ProgramProgressEntity>
+)
+
+data class MealListDRO(
+    val status: Int,
+    val meals: List<MealEntity>
+)
+
+data class WorkoutListDRO(
+    val status: Int,
+    val workouts: List<WorkoutEntity>
+)
+
+// Data class untuk request update role
+data class UpdateRoleRequest(
+    val role: String
+)
+
+// Data class untuk response update role
+data class UpdateRoleResponse(
+    val message: String,
+    val success: Boolean
 )

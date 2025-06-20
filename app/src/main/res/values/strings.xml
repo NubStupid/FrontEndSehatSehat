@@ -9,4 +9,7 @@
     <string name="title_activity_admin_list_user">AdminListUserActivity</string>
     <string name="title_activity_admin_list_program">AdminListProgramActivity</string>
     <string name="title_activity_admin_list_artikel">AdminListArtikelActivity</string>
+    <string name="title_activity_admin_add_program">AdminAddProgramActivity</string>
+    <string name="title_activity_admin_edit_program">AdminEditProgramActivity</string>
+    <string name="title_activity_admin_report">AdminReportActivity</string>
 </resources>

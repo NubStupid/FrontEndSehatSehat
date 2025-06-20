@@ -17,7 +17,6 @@ interface SehatRepository{
 
     suspend fun getProgramDashboard():DashboardDRO
 
-
     suspend fun getAllChatLog():List<ChatLogEntity>
     suspend fun getFromGroupChatLog(group_id:String): List<ChatLogEntity>
     suspend fun getFromChatbotChatLog(username:String): List<ChatLogEntity>
@@ -27,18 +26,15 @@ interface SehatRepository{
 
     suspend fun chatToChatbot(content:String,username:String,chat_group: String)
 
-    // ==== Auth / User ====
     suspend fun registerUser(user: UserDTO): RegisterDRO
     suspend fun loginUser(credentials: LoginDTO): LoginDRO
 
-    // ==== Program CRUD ====
     suspend fun getAllPrograms(): List<ProgramEntity>
     suspend fun getProgramById(id: String): ProgramEntity?
     suspend fun insertProgram(program: ProgramEntity)
     suspend fun updateProgram(program: ProgramEntity)
     suspend fun deleteProgram(program: ProgramEntity)
 
-//    user crud
     suspend fun getAllUsers(): List<UserEntity>
     suspend fun deleteUser(user: UserEntity)
 }
