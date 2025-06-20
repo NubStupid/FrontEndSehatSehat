@@ -30,6 +30,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.sehatsehat.model.UserEntity
 import com.example.sehatsehat.ui.admin.AdminHomepageActivity
 import com.example.sehatsehat.ui.customer.HomeActivity
 import com.example.sehatsehat.ui.expert.ExpertHomepageActivity
@@ -55,7 +56,9 @@ class LoginActivity : ComponentActivity() {
                             "Login admin berhasil! Selamat datang $displayName",
                             Toast.LENGTH_SHORT
                         ).show()
-                        startActivity(Intent(this, AdminHomepageActivity::class.java))
+                        val intent = Intent(this, AdminHomepageActivity::class.java)
+                        intent.putExtra("active_user", displayName)
+                        startActivity(intent)
                         finish()
                     },
                     onLoginCustomer = { displayName ->
@@ -65,7 +68,7 @@ class LoginActivity : ComponentActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                         val intent = Intent(this, HomeActivity::class.java)
-                        intent.putExtra("display_name", displayName)
+                        intent.putExtra("active_user", displayName)
                         startActivity(intent)
                         finish()
                     },
@@ -76,7 +79,7 @@ class LoginActivity : ComponentActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                         val intent = Intent(this, ExpertHomepageActivity::class.java)
-                        intent.putExtra("display_name", displayName)
+                        intent.putExtra("active_user", displayName)
                         startActivity(intent)
                         finish()
                     }
@@ -90,9 +93,9 @@ class LoginActivity : ComponentActivity() {
 @Composable
 fun LoginWithBottomNav(
     viewModel: LoginViewModel,
-    onLoginAdmin: (String) -> Unit,
-    onLoginCustomer: (String) -> Unit,
-    onLoginExpert: (String) -> Unit
+    onLoginAdmin: (UserEntity) -> Unit,
+    onLoginCustomer: (UserEntity) -> Unit,
+    onLoginExpert: (UserEntity) -> Unit
 ) {
     val uiState = viewModel.uiState
     val context = LocalContext.current
@@ -109,15 +112,15 @@ fun LoginWithBottomNav(
             }
             is LoginUiState.SuccessAdmin -> {
                 viewModel.resetState()
-                onLoginAdmin(uiState.displayName)
+                onLoginAdmin(uiState.user)
             }
             is LoginUiState.SuccessCustomer -> {
                 viewModel.resetState()
-                onLoginCustomer(uiState.displayName)
+                onLoginCustomer(uiState.user)
             }
             is LoginUiState.SuccessExpert -> {
                 viewModel.resetState()
-                onLoginExpert(uiState.displayName)
+                onLoginExpert(uiState.user)
             }
             else -> Unit
         }

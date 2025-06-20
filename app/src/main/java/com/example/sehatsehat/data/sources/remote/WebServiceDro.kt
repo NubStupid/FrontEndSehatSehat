@@ -36,6 +36,7 @@ data class UserDRO(
     val dob: String,
     val role: String,
     val pp_url: String,
+    val balance: Int,
     val createdAt: String,
     val updatedAt: String
 )
