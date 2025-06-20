@@ -1,8 +1,10 @@
 package com.example.sehatsehat.data.sources.remote
 
+import com.example.sehatsehat.model.Article
 import com.example.sehatsehat.model.ChatLogEntity
 import com.example.sehatsehat.model.ProgramEntity
 import retrofit2.Response
+import java.util.UUID
 
 class RetrofitDataSource(
     private val retrofitService:WebService
@@ -35,6 +37,29 @@ class RetrofitDataSource(
         return retrofitService.syncProgramProgress()
     }
 
+
+    override suspend fun getArticles(): List<Article> {
+        val response = retrofitService.getArticles()
+        val returned = arrayListOf<Article>()
+        if (response.isSuccessful) {
+            val articles = response.body()?.response
+            if (articles != null) {
+                articles.map {
+                    returned.add(Article(
+                        id = UUID.randomUUID().variant(),
+                        author = it.author,
+                        title = it.title,
+                        description = it.description,
+                        date = it.publishedAt,
+                        content = it.content,
+                    ))
+                }
+            } else {
+                throw RuntimeException("Gagal mengambil data dari server")
+            }
+        }
+        return returned
+    }
     // ======================================
     // 2) Auth / User
     // ======================================
@@ -69,6 +94,10 @@ class RetrofitDataSource(
 
     override suspend fun deleteProgram(id: String) {
         val response: Unit = retrofitService.deleteProgram(id)
+    }
+
+    override suspend fun getProgramByUser(username: String): List<ProgramEntity> {
+        return retrofitService.getProgramByUser(getUserProgramDTO(username))
     }
 
     // user

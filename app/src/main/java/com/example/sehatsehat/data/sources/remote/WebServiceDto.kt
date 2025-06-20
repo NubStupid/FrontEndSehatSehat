@@ -29,3 +29,7 @@ data class UserDTO(
     var role: String,
     var pp_url: String
 )
+
+data class getUserProgramDTO(
+    val username: String
+)

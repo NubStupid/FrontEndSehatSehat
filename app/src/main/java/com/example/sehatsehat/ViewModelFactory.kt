@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.sehatsehat.viewmodel.AdminHomepageViewModel
 import com.example.sehatsehat.viewmodel.ChatbotViewModel
+import com.example.sehatsehat.viewmodel.HomeViewModel
+import com.example.sehatsehat.viewmodel.ProfileViewModel
 
 val SehatViewModelFactory = object : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T =
@@ -18,6 +20,10 @@ val SehatViewModelFactory = object : ViewModelProvider.Factory {
                     ChatbotViewModel(sehatRepository)
                 isAssignableFrom(AdminHomepageViewModel::class.java) ->
                     AdminHomepageViewModel(sehatRepository)
+                isAssignableFrom(ProfileViewModel::class.java) ->
+                    ProfileViewModel(sehatRepository)
+                isAssignableFrom(HomeViewModel::class.java)->
+                    HomeViewModel(sehatRepository)
 
 
                 else ->

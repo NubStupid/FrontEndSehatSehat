@@ -12,8 +12,8 @@ data class Article(
     val date: String,
     val imageUrl: String? = null,
     val isFeatured: Boolean = false,
-    val author: String = "Dr. Smith",
-    val readTime: String = "5 min read",
-    val content: String = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    val tags: List<String> = listOf("Health", "Fitness", "Wellness")
+    val author: String = "",
+    val readTime: String = "",
+    val content: String = "",
+    val tags: List<String> = emptyList()
 ) : Parcelable

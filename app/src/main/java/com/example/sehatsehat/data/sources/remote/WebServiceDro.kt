@@ -36,7 +36,7 @@ data class UserDRO(
     val dob: String,
     val role: String,
     val pp_url: String,
-    val balance: Int,
+    val balance: Int = 0,
     val createdAt: String,
     val updatedAt: String
 )
@@ -105,4 +105,16 @@ data class UpdateRoleRequest(
 data class UpdateRoleResponse(
     val message: String,
     val success: Boolean
+)
+
+data class ArticleJSON(
+    val author:String,
+    val title:String,
+    val description:String,
+    val publishedAt:String,
+    val content:String
+)
+
+data class ArticlesDRO(
+    val response: List<ArticleJSON>
 )

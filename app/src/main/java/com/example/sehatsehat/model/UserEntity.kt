@@ -15,7 +15,7 @@ data class UserEntity(
     var dob: String,
     var role: String,
     var pp_url: String,
-    var balance:Int,
+    var balance:Int = 0,
     var createdAt: String,
     var updatedAt: String
 ):Parcelable

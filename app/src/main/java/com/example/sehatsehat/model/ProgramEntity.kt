@@ -3,7 +3,7 @@ package com.example.sehatsehat.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.sehatsehat.network.TimestampTypeAdapter
-import com.google.gson.annotations.JsonAdapter
+//import com.google.gson.annotations.JsonAdapter
 
 @Entity(tableName = "programs")
 data class ProgramEntity(

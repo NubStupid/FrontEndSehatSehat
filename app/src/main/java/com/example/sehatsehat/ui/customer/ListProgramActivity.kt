@@ -131,10 +131,10 @@ fun ListProgramScreen(
                     it.title.contains(searchQuery, ignoreCase = true) ||
                             it.description.contains(searchQuery, ignoreCase = true)
                 }) { program ->
-                    ProgramCard(
-                        program = program,
-                        onClick = { onProgramClick(program) }
-                    )
+//                    ProgramCard(
+//                        program = program,
+//                        onClick = { onProgramClick(program) }
+//                    )
                 }
             }
         }

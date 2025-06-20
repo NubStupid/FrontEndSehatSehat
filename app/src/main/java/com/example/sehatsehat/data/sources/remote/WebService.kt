@@ -14,6 +14,9 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface WebService {
+
+    @GET("/api/v1/news")
+    suspend fun getArticles(): Response<ArticlesDRO>
 //    CHATBOT
     @POST("/api/v1/chatbot")
     suspend fun chatToChatBot(@Body body: ChatBotDTO):ChatBotMessage
@@ -60,6 +63,11 @@ interface WebService {
     suspend fun getProgramById(
         @Path("id") id: String
     ): ProgramDRO
+
+    @POST("/api/v1/programs/user")
+    suspend fun getProgramByUser(
+        @Body body: getUserProgramDTO
+    ): List<ProgramEntity>
 
     /**
      * POST create program. Body: ProgramEntity ( dianggap JSON sesuai field ProgramEntity ).

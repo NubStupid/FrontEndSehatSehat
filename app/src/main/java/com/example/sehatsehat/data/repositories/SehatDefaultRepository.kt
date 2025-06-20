@@ -15,6 +15,7 @@ import com.example.sehatsehat.data.sources.remote.RemoteDataSource
 import com.example.sehatsehat.data.sources.remote.UserDRO
 import com.example.sehatsehat.data.sources.remote.UserDTO
 import com.example.sehatsehat.data.sources.remote.UserListDRO
+import com.example.sehatsehat.model.Article
 import com.example.sehatsehat.model.ProgramEntity
 import com.example.sehatsehat.model.UserEntity
 import com.example.sehatsehat.ui.customer.ProfileActivity
@@ -32,6 +33,10 @@ class SehatDefaultRepository (
         localDataSource.syncChatGroup(group_id,serverChatGroup.chats)
     }
 
+    override suspend fun getProgramByUser(username: String): List<ProgramEntity> {
+        return remoteDataSource.getProgramByUser(username)
+    }
+
     override suspend fun programSync() {
         val serverProgram = remoteDataSource.syncProgram()
         localDataSource.syncProgram(serverProgram.programs)
@@ -45,6 +50,10 @@ class SehatDefaultRepository (
     override suspend fun programProgressSync() {
         val serverProgress = remoteDataSource.syncProgramProgress()
         localDataSource.syncProgramProgress(serverProgress.progress)
+    }
+
+    override suspend fun getArticles(): List<Article> {
+        return remoteDataSource.getArticles()
     }
 
     override suspend fun getProgramDashboard(): DashboardDRO {
