@@ -5,6 +5,7 @@ import com.example.sehatsehat.model.MealEntity
 import com.example.sehatsehat.model.ProgramEntity
 import com.example.sehatsehat.model.ProgramProgressEntity
 import com.example.sehatsehat.model.UserEntity
+import com.example.sehatsehat.model.UserPogramEntity
 import com.example.sehatsehat.model.WorkoutEntity
 
 data class ChatBotMessage(
@@ -68,6 +69,11 @@ data class ProgramDRO(
 data class ProgramListDRO(
     val status: Int,
     val programs: List<ProgramEntity>
+)
+
+data class UserProgramListDRO(
+    val status:Int,
+    val userPrograms:List<UserPogramEntity>
 )
 
 data class UserListDRO(

@@ -163,7 +163,7 @@ fun PaymentScreen(
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = program.price,
+                            text = program.price.toString(),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFFFFB800)

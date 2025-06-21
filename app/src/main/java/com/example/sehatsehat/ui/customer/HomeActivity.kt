@@ -39,6 +39,9 @@ import com.example.sehatsehat.model.FitnessProgram
 import com.example.sehatsehat.model.UserEntity
 import com.example.sehatsehat.ui.theme.SehatSehatTheme
 import com.example.sehatsehat.viewmodel.HomeViewModel
+import java.text.NumberFormat
+import java.util.Currency
+import java.util.Locale
 
 class HomeActivity : ComponentActivity() {
     val vm by viewModels<HomeViewModel> { SehatViewModelFactory }
@@ -66,6 +69,13 @@ class HomeActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+    fun parseBalanceToIDR(balance:Int):String{
+        val formatter = NumberFormat.getCurrencyInstance(Locale("in","ID"))
+        formatter.currency = Currency.getInstance("IDR")
+        formatter.maximumFractionDigits = 0
+        return formatter.format(balance)
     }
 
     companion object {
@@ -130,8 +140,11 @@ class HomeActivity : ComponentActivity() {
                         verticalAlignment = Alignment.Top
                     ) {
                         Column {
+                            val userObs:State<UserEntity?> = vm.activeUser.observeAsState()
+                            val user = userObs.value
+
                             Text(
-                                text = displayName,
+                                text = user?.display_name?:"Not rendered yet!",
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.Black
@@ -147,7 +160,7 @@ class HomeActivity : ComponentActivity() {
                                     modifier = Modifier.size(16.dp)
                                 )
                                 Text(
-                                    text = "Wallet: Rp. 000.000,00",
+                                    text = "Wallet: ${parseBalanceToIDR(user?.balance?:0)}",
                                     color = Color.Gray,
                                     fontSize = 12.sp,
                                     modifier = Modifier.padding(start = 4.dp)
@@ -422,48 +435,105 @@ class HomeActivity : ComponentActivity() {
 
     @Composable
     fun ProgramContent(onNavigateToProgram: (FitnessProgram) -> Unit) {
-        val programs = listOf(
-            FitnessProgram(
-                id = 1,
-                title = "Slim Fit Project",
-                dateRange = "10/02/2026 - 10/03/2026",
-                description = "Medium Intensity training with HIIT to burn fat",
-                duration = "15 Hours 30 Minutes",
-                progress = 0.7f,
-                backgroundGradient = listOf(0xFF6B46C1, 0xFF9333EA),
-                isPurchased = true
-            ),
-            FitnessProgram(
-                id = 2,
-                title = "Muscle Building Pro",
-                dateRange = "15/02/2026 - 15/04/2026",
-                description = "High intensity strength training program",
-                duration = "25 Hours 45 Minutes",
-                progress = 0.0f,
-                backgroundGradient = listOf(0xFF059669, 0xFF10B981),
-                isPurchased = false
-            )
-        )
+        val purchasedObs:State<List<FitnessProgram>?> = vm.purchasedPrograms.observeAsState()
+        val purchasedPrograms = purchasedObs.value
+        val availableObs:State<List<FitnessProgram>?> = vm.programAvailable.observeAsState()
+        val availablePrograms = availableObs.value
+
+//        val programs = listOf(
+//            FitnessProgram(
+//                id = 1,
+//                title = "Slim Fit Project",
+//                dateRange = "10/02/2026 - 10/03/2026",
+//                description = "Medium",
+//                duration = "15 Hours 30 Minutes",
+//                progress = 0.7f,
+//                backgroundGradient = listOf(0xFF6B46C1, 0xFF9333EA),
+//                isPurchased = true,
+//                detailedDescription = "DWNDQJDNQWDQWD"
+//            ),
+//            FitnessProgram(
+//                id = 2,
+//                title = "Muscle Building Pro",
+//                dateRange = "15/02/2026 - 15/04/2026",
+//                description = "High intensity strength training program",
+//                duration = "25 Hours 45 Minutes",
+//                progress = 0.0f,
+//                backgroundGradient = listOf(0xFF059669, 0xFF10B981),
+//                isPurchased = false,
+//                detailedDescription = "High intensity strength training program"
+//            )
+//        )
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         ) {
+//            Text(
+//                text = "Available Programs",
+//                fontSize = 18.sp,
+//                fontWeight = FontWeight.Bold,
+//                modifier = Modifier.padding(bottom = 8.dp)
+//            )
+//
+//            // Using Column instead of LazyColumn for programs
+//            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+//                programs.forEach { program ->
+//                    ProgramCard(
+//                        program = program,
+//                        onClick = { onNavigateToProgram(program) }
+//                    )
+//                }
+//            }
             Text(
-                text = "Available Programs",
+                text = "Purchased Programs",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = 8.dp) // Keep this padding for the title
             )
 
-            // Using Column instead of LazyColumn for programs
-            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                programs.forEach { program ->
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f, fill = false) // Takes available space, shrinks if content is smaller
+                    .fillMaxWidth()
+                    .background(Color.LightGray.copy(alpha = 0.3f)), // Just for visualization
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(
+                    items = purchasedPrograms.orEmpty(),
+                    key = { program -> program.id } // Optional: Provide a stable key for better performance
+                ) { program ->
                     ProgramCard(
                         program = program,
                         onClick = { onNavigateToProgram(program) }
                     )
+
+                }
+            }
+            Text(
+                text = "Available Programs",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 8.dp) // Keep this padding for the title
+            )
+
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f, fill = false) // Takes available space, shrinks if content is smaller
+                    .fillMaxWidth()
+                    .background(Color.LightGray.copy(alpha = 0.3f)), // Just for visualization
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(
+                    items = availablePrograms.orEmpty(),
+                    key = { program -> program.id } // Optional: Provide a stable key for better performance
+                ) { program ->
+                    ProgramCard(
+                        program = program,
+                        onClick = { onNavigateToProgram(program) }
+                    )
+
                 }
             }
         }

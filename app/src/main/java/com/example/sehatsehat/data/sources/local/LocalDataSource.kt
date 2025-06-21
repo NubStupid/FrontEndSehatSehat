@@ -5,6 +5,7 @@ import com.example.sehatsehat.model.ChatLogEntity
 import com.example.sehatsehat.model.ProgramEntity
 import com.example.sehatsehat.model.ProgramProgressEntity
 import com.example.sehatsehat.model.UserEntity
+import com.example.sehatsehat.model.UserPogramEntity
 
 interface LocalDataSource {
 //    suspend fun getAll():List<Todo>
@@ -25,7 +26,7 @@ interface LocalDataSource {
     suspend fun syncProgram(programs:List<ProgramEntity>)
     suspend fun syncUser(users:List<UserEntity>)
     suspend fun syncProgramProgress(progress:List<ProgramProgressEntity>)
-
+    suspend fun syncUserProgram(userPrograms:List<UserPogramEntity>)
 
     suspend fun getDashboard(): DashboardDRO
 
@@ -35,6 +36,11 @@ interface LocalDataSource {
     suspend fun insertProgram(program: ProgramEntity)
     suspend fun updateProgram(program: ProgramEntity)
     suspend fun deleteProgram(program: ProgramEntity)
+    suspend fun getProgramByUser(username: String): List<ProgramEntity>
+    suspend fun getProgramPurchasable(username:String): List<ProgramEntity>
+    suspend fun getUserProgramById(id:String):UserPogramEntity?
+    suspend fun getUserProgramByProgramId(id:String):UserPogramEntity?
+    suspend fun getProgramProgressById(id:String):ProgramProgressEntity?
 
     // user
     suspend fun getAllUsers(): List<UserEntity>

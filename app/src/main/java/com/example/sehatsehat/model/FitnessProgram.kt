@@ -14,17 +14,15 @@ data class FitnessProgram(
     val description: String,
     val duration: String,
     val progress: Float,
-    val backgroundGradient: List<Long>, // store raw color values
+    val backgroundGradient: List<Long>,
     val isPurchased: Boolean = false,
-    val price: String = "Rp 150.000",
-    val rating: Float = 4.8f,
-    val totalUsers: Int = 1234,
-    val instructor: String = "John Doe",
+    val price: Int = 0,
+    val instructor: String = "Sehat Sehat Expert",
     val benefits: List<String> = listOf(
         "Burn fat effectively",
         "Increase stamina",
         "Build lean muscle",
         "Improve cardiovascular health"
     ),
-    val detailedDescription: String = "This comprehensive program combines high-intensity interval training with strength exercises..."
+    val detailedDescription: String
 ) : Parcelable

@@ -7,6 +7,7 @@ import com.example.sehatsehat.data.sources.remote.RegisterDRO
 import com.example.sehatsehat.data.sources.remote.UserDTO
 import com.example.sehatsehat.model.Article
 import com.example.sehatsehat.model.ChatLogEntity
+import com.example.sehatsehat.model.FitnessProgram
 import com.example.sehatsehat.model.ProgramEntity
 import com.example.sehatsehat.model.UserEntity
 
@@ -15,6 +16,7 @@ interface SehatRepository{
     suspend fun programSync()
     suspend fun userSync()
     suspend fun programProgressSync()
+    suspend fun userProgramSync()
 
     suspend fun getArticles():List<Article>
 
@@ -40,6 +42,8 @@ interface SehatRepository{
     suspend fun updateProgram(program: ProgramEntity)
     suspend fun deleteProgram(program: ProgramEntity)
     suspend fun getProgramByUser(username: String): List<ProgramEntity>
+    suspend fun getAllUserProgramForUI(username: String):List<FitnessProgram>
+    suspend fun getAllProgramForPurchase(username:String):List<FitnessProgram>
 
     suspend fun getAllUsers(): List<UserEntity>
     suspend fun deleteUser(user: UserEntity)

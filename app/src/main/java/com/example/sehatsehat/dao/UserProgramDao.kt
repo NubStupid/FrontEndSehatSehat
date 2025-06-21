@@ -18,4 +18,16 @@ interface UserProgramDao {
     @Query("SELECT * from user_programs WHERE id = :id")
     suspend fun getUserProgramById(id: String): UserPogramEntity?
 
+    @Query("SELECT * from user_programs WHERE program_id =:id")
+    suspend fun getUserProgramByProgramId(id:String):UserPogramEntity?
+
+    @Query("DELETE FROM user_programs")
+    suspend fun deleteAll()
+    @Query("SELECT * from user_programs WHERE username =:username")
+    suspend fun getUserProgramByUsername(username:String):List<UserPogramEntity>
+
+    @Query("SELECT * from user_programs WHERE username !=:username")
+    suspend fun getUserProgramPurchasableByUsername(username:String):List<UserPogramEntity>
+
+
 }

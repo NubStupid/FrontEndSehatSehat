@@ -3,6 +3,7 @@ package com.example.sehatsehat.data.sources.remote
 import com.example.sehatsehat.model.Article
 import com.example.sehatsehat.model.ChatLogEntity
 import com.example.sehatsehat.model.ProgramEntity
+import com.example.sehatsehat.model.UserPogramEntity
 
 interface RemoteDataSource {
     suspend fun chatToChatbot(message:ChatBotDTO):ChatBotMessage
@@ -14,6 +15,7 @@ interface RemoteDataSource {
     suspend fun syncProgram():ProgramListDRO
     suspend fun syncUser():UserListDRO
     suspend fun syncProgramProgress():ProgramProgressDRO
+    suspend fun syncUserProgram():UserProgramListDRO
 
     suspend fun getArticles():List<Article>
 

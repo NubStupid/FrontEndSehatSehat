@@ -6,6 +6,7 @@ import com.example.sehatsehat.model.ChatLogEntity
 import com.example.sehatsehat.model.ProgramEntity
 import com.example.sehatsehat.model.ProgramProgressEntity
 import com.example.sehatsehat.model.UserEntity
+import com.example.sehatsehat.model.UserPogramEntity
 import java.util.Date
 
 class RoomDataSource(
@@ -31,6 +32,13 @@ class RoomDataSource(
         db.programProgressDao().deleteAll()
         for(p in progress ){
             db.programProgressDao().insert(p)
+        }
+    }
+
+    override suspend fun syncUserProgram(userPrograms: List<UserPogramEntity>) {
+        db.userProgramDao().deleteAll()
+        for(uP in userPrograms){
+            db.userProgramDao().insertUserProgram(uP)
         }
     }
 
@@ -148,6 +156,42 @@ class RoomDataSource(
         db.programDao().delete(program)
     }
 
+    override suspend fun getProgramByUser(username: String): List<ProgramEntity> {
+        val user_programs = db.userProgramDao().getUserProgramByUsername(username)
+        val program_list = arrayListOf<ProgramEntity>()
+        for (uP in user_programs){
+            val program = db.programDao().findById(uP.program_id)
+            if(program != null){
+                program_list.add(program)
+            }
+        }
+        return program_list
+    }
+
+    override suspend fun getProgramPurchasable(username: String): List<ProgramEntity> {
+        val user_programs = db.userProgramDao().getUserProgramPurchasableByUsername(username)
+        val program_list = arrayListOf<ProgramEntity>()
+        for (uP in user_programs){
+            val program = db.programDao().findById(uP.program_id)
+            if(program != null){
+                program_list.add(program)
+            }
+        }
+        return program_list
+    }
+
+    override suspend fun getUserProgramById(id: String): UserPogramEntity? {
+        return db.userProgramDao().getUserProgramById(id)
+    }
+
+    override suspend fun getUserProgramByProgramId(id: String): UserPogramEntity? {
+        return db.userProgramDao().getUserProgramByProgramId(id)
+    }
+
+    override suspend fun getProgramProgressById(id: String): ProgramProgressEntity? {
+        return db.programProgressDao().findById(id)
+    }
+
     // user
     override suspend fun getAllUsers(): List<UserEntity> {
         return db.userDao().getAllUsers()
@@ -156,4 +200,5 @@ class RoomDataSource(
     override suspend fun deleteUser(user: UserEntity) {
         return db.userDao().deleteUser(user)
     }
+
 }

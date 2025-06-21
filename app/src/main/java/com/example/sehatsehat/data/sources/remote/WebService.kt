@@ -59,6 +59,9 @@ interface WebService {
     @GET("/api/v1/programs")
     suspend fun getAllPrograms(): ProgramListDRO
 
+    @POST("/api/v1/programs/user/sync")
+    suspend fun syncUserProgram():UserProgramListDRO
+
     /**
      * GET detail program per ID. → ProgramDRO
      */

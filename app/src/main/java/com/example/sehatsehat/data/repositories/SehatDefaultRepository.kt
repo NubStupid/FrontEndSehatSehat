@@ -16,9 +16,12 @@ import com.example.sehatsehat.data.sources.remote.UserDRO
 import com.example.sehatsehat.data.sources.remote.UserDTO
 import com.example.sehatsehat.data.sources.remote.UserListDRO
 import com.example.sehatsehat.model.Article
+import com.example.sehatsehat.model.FitnessProgram
 import com.example.sehatsehat.model.ProgramEntity
 import com.example.sehatsehat.model.UserEntity
 import com.example.sehatsehat.ui.customer.ProfileActivity
+import java.util.Date
+import java.util.UUID
 
 class SehatDefaultRepository (
     private val localDataSource:LocalDataSource,
@@ -51,6 +54,11 @@ class SehatDefaultRepository (
     override suspend fun programProgressSync() {
         val serverProgress = remoteDataSource.syncProgramProgress()
         localDataSource.syncProgramProgress(serverProgress.progress)
+    }
+
+    override suspend fun userProgramSync() {
+        val userPrograms = remoteDataSource.syncUserProgram()
+        localDataSource.syncUserProgram(userPrograms.userPrograms)
     }
 
     override suspend fun getArticles(): List<Article> {
@@ -213,5 +221,46 @@ class SehatDefaultRepository (
         remoteDataSource.deleteProgram(program.id)
         // Hapus di local
         localDataSource.deleteProgram(program)
+    }
+
+    override suspend fun getAllUserProgramForUI(username: String): List<FitnessProgram> {
+        val user_programs = localDataSource.getProgramByUser(username)
+        val ui_list = arrayListOf<FitnessProgram>()
+        var id = 1
+//        Log.d("luar","luar")
+        for(up in user_programs){
+            val upEntity = localDataSource.getUserProgramByProgramId(up.id)
+//            Log.d("upe",upEntity.toString())
+            if(upEntity != null){
+//                Log.d("upp","upp")
+                val programProgress = localDataSource.getProgramProgressById(upEntity.program_progress_id)
+                if(programProgress != null){
+//                    Log.d("ui","ui")
+                    val progress = (programProgress.progress_index / programProgress.progress_list.length).toFloat()
+                    val dateRange = "${Date(upEntity.createdAt)} - ${Date(upEntity.expires_in)}"
+                    val programs_UI = FitnessProgram(id,up.program_name,dateRange,"Sehat Sehat's Program named ${up.program_name}","",progress,listOf(0xFF6B46C1, 0xFF9333EA),true,up.pricing.toInt(), detailedDescription = "Program ${up.program_name} has a detailed program about ${programProgress.progress_list_type} to help achieve your goals")
+                    ui_list.add(programs_UI)
+                    id++
+                }
+            }
+        }
+        return ui_list
+    }
+
+    override suspend fun getAllProgramForPurchase(username: String): List<FitnessProgram> {
+        val user_programs = localDataSource.getProgramByUser(username)
+        val programs = localDataSource.getAllPrograms()
+
+        val ui_list = arrayListOf<FitnessProgram>()
+        var id = 1
+        for(up in programs){
+            if(user_programs.contains(up)){
+                continue
+            }
+            val programs_UI = FitnessProgram(id,up.program_name,"Around 30 days","Sehat Sehat's Program named ${up.program_name}","",0f,listOf(0xFF059669, 0xFF10B981),false,up.pricing.toInt(), detailedDescription = "Program ${up.program_name} has a detailed program to help achieve your goals")
+            id++
+            ui_list.add(programs_UI)
+        }
+        return ui_list
     }
 }

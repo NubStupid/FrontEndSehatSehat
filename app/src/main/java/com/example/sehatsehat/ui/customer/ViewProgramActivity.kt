@@ -160,23 +160,6 @@ fun ProgramDetailScreen(
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.SemiBold
                                     )
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        modifier = Modifier.padding(top = 4.dp)
-                                    ) {
-                                        Icon(
-                                            Icons.Default.Star,
-                                            contentDescription = "Rating",
-                                            tint = Color(0xFFFFB800),
-                                            modifier = Modifier.size(16.dp)
-                                        )
-                                        Text(
-                                            text = "${program.rating} (${program.totalUsers})",
-                                            color = Color.White,
-                                            fontSize = 12.sp,
-                                            modifier = Modifier.padding(start = 4.dp)
-                                        )
-                                    }
                                 }
 
                                 if (!program.isPurchased) {
@@ -185,7 +168,7 @@ fun ProgramDetailScreen(
                                         color = Color(0xFFFFB800)
                                     ) {
                                         Text(
-                                            text = program.price,
+                                            text = program.price.toString(),
                                             color = Color.White,
                                             fontSize = 16.sp,
                                             fontWeight = FontWeight.Bold,

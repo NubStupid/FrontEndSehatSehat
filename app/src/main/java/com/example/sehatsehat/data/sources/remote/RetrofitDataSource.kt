@@ -42,6 +42,10 @@ class RetrofitDataSource(
         return retrofitService.syncProgramProgress()
     }
 
+    override suspend fun syncUserProgram(): UserProgramListDRO {
+        return retrofitService.syncUserProgram()
+    }
+
 
     override suspend fun getArticles(): List<Article> {
         val response = retrofitService.getArticles()

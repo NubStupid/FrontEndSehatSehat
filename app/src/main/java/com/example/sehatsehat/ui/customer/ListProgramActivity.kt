@@ -56,7 +56,8 @@ fun ListProgramScreen(
             description = "Medium Intensity training with HIIT to burn fat",
             duration = "15 Hours 30 Minutes",
             progress = 0.7f,
-            backgroundGradient = listOf(0xFF6B46C1, 0xFF9333EA)
+            backgroundGradient = listOf(0xFF6B46C1, 0xFF9333EA),
+            detailedDescription = "Medium Intensity training with HIIT to burn fat"
         ),
         FitnessProgram(
             id = 2,
@@ -65,7 +66,8 @@ fun ListProgramScreen(
             description = "High intensity strength training program",
             duration = "25 Hours 45 Minutes",
             progress = 0.0f,
-            backgroundGradient = listOf(0xFF059669, 0xFF10B981)
+            backgroundGradient = listOf(0xFF059669, 0xFF10B981),
+            detailedDescription = "High intensity strength training program"
         ),
         FitnessProgram(
             id = 3,
@@ -74,7 +76,8 @@ fun ListProgramScreen(
             description = "Intensive cardiovascular training",
             duration = "12 Hours 20 Minutes",
             progress = 0.0f,
-            backgroundGradient = listOf(0xFFDC2626, 0xFFEF4444)
+            backgroundGradient = listOf(0xFFDC2626, 0xFFEF4444),
+            detailedDescription = "High intensity strength training program"
         )
     )
 
