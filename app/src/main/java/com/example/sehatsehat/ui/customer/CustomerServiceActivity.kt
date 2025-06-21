@@ -235,7 +235,7 @@ class CustomerServiceActivity : ComponentActivity() {
         CenterAlignedTopAppBar(
             title = {
                 Text(
-                    "Customer Service Help with Chatbot",
+                    "Customer Service with Chatbot",
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.titleLarge // Or any other style you prefer
