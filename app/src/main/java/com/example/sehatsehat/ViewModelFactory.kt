@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.sehatsehat.viewmodel.AdminHomepageViewModel
 import com.example.sehatsehat.viewmodel.ChatbotViewModel
+import com.example.sehatsehat.viewmodel.CustomerServiceViewModel
 import com.example.sehatsehat.viewmodel.HomeViewModel
 import com.example.sehatsehat.viewmodel.ProfileViewModel
 
@@ -24,6 +25,8 @@ val SehatViewModelFactory = object : ViewModelProvider.Factory {
                     ProfileViewModel(sehatRepository)
                 isAssignableFrom(HomeViewModel::class.java)->
                     HomeViewModel(sehatRepository)
+                isAssignableFrom(CustomerServiceViewModel::class.java)->
+                    CustomerServiceViewModel(sehatRepository)
 
 
                 else ->

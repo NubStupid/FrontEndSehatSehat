@@ -30,31 +30,32 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sehatsehat.SehatViewModelFactory
 import com.example.sehatsehat.model.ChatLogEntity
+import com.example.sehatsehat.model.UserEntity
+import com.example.sehatsehat.ui.customer.ui.theme.SehatSehatTheme
+import com.example.sehatsehat.viewmodel.CustomerServiceViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
-import kotlin.text.isNotBlank
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.text.style.TextOverflow
-import com.example.sehatsehat.model.UserEntity
-import com.example.sehatsehat.viewmodel.ChatbotViewModel
 
-class ChatbotActivity : ComponentActivity() {
-    val vm by viewModels<ChatbotViewModel>(){SehatViewModelFactory}
-
+class CustomerServiceActivity : ComponentActivity() {
+    val vm by viewModels<CustomerServiceViewModel> { SehatViewModelFactory }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         val activeUser = intent.getParcelableExtra<UserEntity>("active_user")
         if(activeUser != null){
-            vm.init(activeUser.username, activeUser.username+"_chatbot")
+            vm.init(activeUser.username, activeUser.username+"_cs")
             enableEdgeToEdge()
             setContent {
                 ChatScreen(messages = vm.chatMessages.value ?: emptyList()) {}
@@ -62,7 +63,6 @@ class ChatbotActivity : ComponentActivity() {
             }
         }
     }
-
     @Composable
     fun ChatScreen(messages: List<ChatLogEntity>, onSendMessage: (String) -> Unit) {
         val chatMessages by vm.chatMessages.observeAsState(emptyList())
@@ -235,7 +235,7 @@ class ChatbotActivity : ComponentActivity() {
         CenterAlignedTopAppBar(
             title = {
                 Text(
-                    "Chatbot",
+                    "Customer Service Help with Chatbot",
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.titleLarge // Or any other style you prefer
@@ -267,5 +267,4 @@ class ChatbotActivity : ComponentActivity() {
         super.onResume()
         vm.chatbotSync("GC00001")
     }
-
 }

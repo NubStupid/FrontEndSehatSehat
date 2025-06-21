@@ -13,6 +13,11 @@ class RetrofitDataSource(
         return retrofitService.chatToChatBot(message)
     }
 
+    override suspend fun chatToCustomerService(message: ChatBotDTO): ChatBotMessage {
+        return retrofitService.chatToCustomerService(message)
+    }
+
+
     override suspend fun insertChatLog(chatlog: ChatLogDTO): ChatLogDRO {
         return retrofitService.addChatLog(chatlog)
     }

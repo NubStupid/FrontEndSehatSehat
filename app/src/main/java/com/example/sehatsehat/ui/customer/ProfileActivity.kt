@@ -62,7 +62,9 @@ class ProfileActivity : ComponentActivity() {
                             finish()
                         },
                         onChatWithChatbot = {
-
+                            val intent = Intent(this, CustomerServiceActivity::class.java)
+                            intent.putExtra("active_user",activeUser)
+                            startActivity(intent)
                         },
                         onTopUp = {
 
@@ -210,7 +212,7 @@ class ProfileActivity : ComponentActivity() {
                         ProfileOptionItem(
                             icon = Icons.Default.Build,
                             text = "Help Center using Chatbot",
-                            onClick = { /* Open help center */ }
+                            onClick = onChatWithChatbot
                         )
 
 

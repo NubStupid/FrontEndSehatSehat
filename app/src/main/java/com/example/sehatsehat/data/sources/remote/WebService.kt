@@ -21,6 +21,9 @@ interface WebService {
     @POST("/api/v1/chatbot")
     suspend fun chatToChatBot(@Body body: ChatBotDTO):ChatBotMessage
 
+    @POST("/api/v1/customer_service")
+    suspend fun chatToCustomerService(@Body body: ChatBotDTO):ChatBotMessage
+
     @POST("/api/v1/chat")
     suspend fun addChatLog(@Body body:ChatLogDTO):ChatLogDRO
 

@@ -74,6 +74,10 @@ class SehatDefaultRepository (
         return localDataSource.getFromChatbotChatLog(username)
     }
 
+    override suspend fun getFromCSChatLog(username: String): List<ChatLogEntity> {
+        return localDataSource.getFromCSChatLog(username)
+    }
+
     override suspend fun getFromGroupChatLog(group_id: String): List<ChatLogEntity> {
         TODO("Not yet implemented")
     }
@@ -95,6 +99,16 @@ class SehatDefaultRepository (
     override suspend fun chatToChatbot(content: String, username: String, chat_group: String) {
         insertChatLog(content,username, chat_group)
         val message = remoteDataSource.chatToChatbot(ChatBotDTO(content))
+        insertChatLog(message.response,"Chatbot",chat_group)
+    }
+
+    override suspend fun chatToCustomerService(
+        content: String,
+        username: String,
+        chat_group: String
+    ) {
+        insertChatLog(content,username, chat_group)
+        val message = remoteDataSource.chatToCustomerService(ChatBotDTO(content))
         insertChatLog(message.response,"Chatbot",chat_group)
     }
 

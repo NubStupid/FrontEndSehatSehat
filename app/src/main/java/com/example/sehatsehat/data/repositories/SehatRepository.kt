@@ -23,11 +23,13 @@ interface SehatRepository{
     suspend fun getAllChatLog():List<ChatLogEntity>
     suspend fun getFromGroupChatLog(group_id:String): List<ChatLogEntity>
     suspend fun getFromChatbotChatLog(username:String): List<ChatLogEntity>
+    suspend fun getFromCSChatLog(username:String): List<ChatLogEntity>
     suspend fun insertChatLog(content:String, username:String,chat_group:String)
     suspend fun updateChatLog(id:String, content:String)
     suspend fun deleteChatLog(id:String)
 
     suspend fun chatToChatbot(content:String,username:String,chat_group: String)
+    suspend fun chatToCustomerService(content:String,username:String,chat_group: String)
 
     suspend fun registerUser(user: UserDTO): RegisterDRO
     suspend fun loginUser(credentials: LoginDTO): LoginDRO

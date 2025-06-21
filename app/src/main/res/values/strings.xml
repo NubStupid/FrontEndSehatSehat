@@ -12,4 +12,5 @@
     <string name="title_activity_admin_add_program">AdminAddProgramActivity</string>
     <string name="title_activity_admin_edit_program">AdminEditProgramActivity</string>
     <string name="title_activity_admin_report">AdminReportActivity</string>
+    <string name="title_activity_customer_service">CustomerServiceActivity</string>
 </resources>

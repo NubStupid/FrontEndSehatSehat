@@ -16,6 +16,7 @@ interface LocalDataSource {
     suspend fun getAllChatLog():List<ChatLogEntity>
     suspend fun getFromGroupChatLog(group_id:String): List<ChatLogEntity>
     suspend fun getFromChatbotChatLog(username:String): List<ChatLogEntity>
+    suspend fun getFromCSChatLog(username:String): List<ChatLogEntity>
     suspend fun insertChatLog(content:String, username:String,chat_group:String): ChatLogEntity
     suspend fun updateChatLog(id:String, content:String): ChatLogEntity
     suspend fun deleteChatLog(id:String): ChatLogEntity

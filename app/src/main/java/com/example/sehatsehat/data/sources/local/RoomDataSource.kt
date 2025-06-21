@@ -95,6 +95,11 @@ class RoomDataSource(
         return db.chatLogDao().getChatFromBot(username)
     }
 
+    override suspend fun getFromCSChatLog(username: String): List<ChatLogEntity> {
+        return db.chatLogDao().getChatFromCs(username)
+    }
+
+
     override suspend fun getFromGroupChatLog(group_id: String): List<ChatLogEntity> {
         Log.d("test",group_id)
         return db.chatLogDao().getChatFromGroup(group_id)

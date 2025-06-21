@@ -24,6 +24,8 @@ interface ChatLogDao {
     suspend fun getChatFromGroup(group_id:String):List<ChatLogEntity>
     @Query("SELECT * from chat_log where chat_group_id =:username || '_chatbot'")
     suspend fun getChatFromBot(username:String):List<ChatLogEntity>
+    @Query("SELECT * from chat_log where chat_group_id =:username || '_cs'")
+    suspend fun getChatFromCs(username:String):List<ChatLogEntity>
     @Query("SELECT * from chat_log where id =:id")
     suspend fun getChatFromId(id:String): ChatLogEntity?
     @Query("SELECT * from chat_log")
