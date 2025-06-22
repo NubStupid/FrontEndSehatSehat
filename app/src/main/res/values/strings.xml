@@ -13,4 +13,9 @@
     <string name="title_activity_admin_edit_program">AdminEditProgramActivity</string>
     <string name="title_activity_admin_report">AdminReportActivity</string>
     <string name="title_activity_customer_service">CustomerServiceActivity</string>
+    <string name="title_activity_customer_update_profile">CustomerUpdateProfileActivity</string>
+    <string name="title_activity_customer_topup">CustomerTopupActivity</string>
+    <string name="title_activity_customer_update_profile_view_model">
+        CustomerUpdateProfileViewModel
+    </string>
 </resources>

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.sehatsehat.viewmodel.AdminHomepageViewModel
 import com.example.sehatsehat.viewmodel.ChatbotViewModel
 import com.example.sehatsehat.viewmodel.CustomerServiceViewModel
+import com.example.sehatsehat.viewmodel.CustomerTopupViewModel
 import com.example.sehatsehat.viewmodel.HomeViewModel
 import com.example.sehatsehat.viewmodel.ProfileViewModel
 
@@ -27,7 +28,8 @@ val SehatViewModelFactory = object : ViewModelProvider.Factory {
                     HomeViewModel(sehatRepository)
                 isAssignableFrom(CustomerServiceViewModel::class.java)->
                     CustomerServiceViewModel(sehatRepository)
-
+                isAssignableFrom(CustomerTopupViewModel::class.java)->
+                    CustomerTopupViewModel(sehatRepository)
 
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

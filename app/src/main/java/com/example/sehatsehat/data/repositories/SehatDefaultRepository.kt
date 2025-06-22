@@ -15,6 +15,8 @@ import com.example.sehatsehat.data.sources.remote.RemoteDataSource
 import com.example.sehatsehat.data.sources.remote.UserDRO
 import com.example.sehatsehat.data.sources.remote.UserDTO
 import com.example.sehatsehat.data.sources.remote.UserListDRO
+import com.example.sehatsehat.data.sources.remote.userTopUpResponse
+import com.example.sehatsehat.data.sources.remote.userUpdateProfileResponse
 import com.example.sehatsehat.model.Article
 import com.example.sehatsehat.model.FitnessProgram
 import com.example.sehatsehat.model.ProgramEntity
@@ -145,6 +147,10 @@ class SehatDefaultRepository (
         }
     }
 
+    override suspend fun getUserProfile(username: String): UserDRO {
+        return remoteDataSource.getuserProfile(username)
+    }
+
 //    override suspend fun getUserByUsername(username: String): UserEntity? {
 //        val localProg = localDataSource.getUserByUsername(username)
 //        return if (localProg != null) {
@@ -170,6 +176,19 @@ class SehatDefaultRepository (
         remoteDataSource.deleteUser(user.username)
         // Hapus di local
         localDataSource.deleteUser(user)
+    }
+
+    override suspend fun userTopUp(username: String, amount: Int): userTopUpResponse {
+        return remoteDataSource.userTopUp(username, amount)
+    }
+
+    override suspend fun userUpdateProfile(
+        username: String,
+        display_name: String,
+        password: String,
+        dob: String
+    ): userUpdateProfileResponse {
+        return remoteDataSource.userUpdateProfile(username, display_name, password, dob)
     }
 
     // ==== (3) Program CRUD ====

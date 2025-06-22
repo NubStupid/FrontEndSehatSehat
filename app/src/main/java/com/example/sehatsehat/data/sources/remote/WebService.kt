@@ -137,4 +137,23 @@ interface WebService {
 
     @GET("/api/v1/reports/monthly-purchases")
     suspend fun getMonthlyReport(): Response<List<ReportItem>>
+
+    @PUT("/api/v1/users/{username}/topup/{amount}")
+    suspend fun userTopUp(
+        @Path("username") username: String,
+        @Path("amount") amount: Int
+    ): userTopUpResponse
+
+    @GET("/api/v1/users/{username}")
+    suspend fun getUserProfile(
+        @Path("username") username: String
+    ): UserDRO
+
+    @PUT("/api/v1/users/{username}/updateProfile/{display_name}/{password}/{dob}")
+    suspend fun userUpdateProfile(
+        @Path("username") username: String,
+        @Path("display_name") display_name: String,
+        @Path("password") password: String,
+        @Path("dob") dob: String
+    ): userUpdateProfileResponse
 }

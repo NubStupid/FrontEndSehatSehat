@@ -64,6 +64,7 @@ class HomeActivity : ComponentActivity() {
                         val intent = Intent(this, ProfileActivity::class.java)
                         intent.putExtra("display_name", activeUser.display_name)
                         intent.putExtra("active_user", activeUser)
+                        intent.putExtra("username", activeUser.username)
                         startActivity(intent)
                     }
                 )

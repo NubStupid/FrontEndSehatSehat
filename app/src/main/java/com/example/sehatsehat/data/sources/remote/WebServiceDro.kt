@@ -124,3 +124,13 @@ data class ArticleJSON(
 data class ArticlesDRO(
     val response: List<ArticleJSON>
 )
+
+data class userTopUpResponse(
+    val message: String,
+    val success: Boolean
+)
+
+data class userUpdateProfileResponse(
+    val message: String,
+    val success: Boolean
+)

@@ -4,7 +4,10 @@ import com.example.sehatsehat.data.sources.remote.DashboardDRO
 import com.example.sehatsehat.data.sources.remote.LoginDRO
 import com.example.sehatsehat.data.sources.remote.LoginDTO
 import com.example.sehatsehat.data.sources.remote.RegisterDRO
+import com.example.sehatsehat.data.sources.remote.UserDRO
 import com.example.sehatsehat.data.sources.remote.UserDTO
+import com.example.sehatsehat.data.sources.remote.userTopUpResponse
+import com.example.sehatsehat.data.sources.remote.userUpdateProfileResponse
 import com.example.sehatsehat.model.Article
 import com.example.sehatsehat.model.ChatLogEntity
 import com.example.sehatsehat.model.FitnessProgram
@@ -46,5 +49,9 @@ interface SehatRepository{
     suspend fun getAllProgramForPurchase(username:String):List<FitnessProgram>
 
     suspend fun getAllUsers(): List<UserEntity>
+    suspend fun getUserProfile(username: String): UserDRO
     suspend fun deleteUser(user: UserEntity)
+
+    suspend fun userTopUp(username: String, amount: Int): userTopUpResponse
+    suspend fun userUpdateProfile(username: String, display_name: String, password: String, dob: String): userUpdateProfileResponse
 }

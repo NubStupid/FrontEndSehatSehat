@@ -39,10 +39,13 @@ import com.example.sehatsehat.viewmodel.ProfileViewModel
 
 class ProfileActivity : ComponentActivity() {
     val vm by viewModels<ProfileViewModel>(){ SehatViewModelFactory}
+    private lateinit var username: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val displayName = intent.getStringExtra("display_name") ?: "Hanvy Hendrawan"
         val activeUser = intent.getParcelableExtra<UserEntity>("active_user")
+        username = intent.getStringExtra("username") ?: ""
         if(activeUser != null){
             vm.init(activeUser)
 
@@ -52,7 +55,9 @@ class ProfileActivity : ComponentActivity() {
                         displayName = displayName,
                         onBackClick = { finish() },
                         onEditProfile = {
-                            // Handle edit profile
+                            val intent = Intent(this, CustomerUpdateProfileActivity::class.java)
+                            intent.putExtra("USERNAME", activeUser.username)
+                            startActivity(intent)
                         },
                         onLogout = {
                             val intent = Intent(this, LoginActivity::class.java).apply {
@@ -197,7 +202,12 @@ class ProfileActivity : ComponentActivity() {
                         ProfileOptionItem(
                             icon = Icons.Default.Person,
                             text = "Top Up",
-                            onClick = { /* Handle privacy settings */ }
+                            onClick = {
+                                val intent = Intent(this@ProfileActivity, CustomerTopupActivity::class.java).apply {
+                                    putExtra("USERNAME", username)
+                                }
+                                startActivity(intent)
+                            }
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))

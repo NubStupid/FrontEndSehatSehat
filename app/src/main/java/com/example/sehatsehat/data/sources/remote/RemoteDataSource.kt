@@ -33,5 +33,8 @@ interface RemoteDataSource {
 
     // user
     suspend fun getAllUsers(): UserListDRO
+    suspend fun getuserProfile(username: String): UserDRO
     suspend fun deleteUser(username: String)
+    suspend fun userTopUp(username: String, amount: Int): userTopUpResponse
+    suspend fun userUpdateProfile(username: String, display_name: String, password: String, dob: String): userUpdateProfileResponse
 }

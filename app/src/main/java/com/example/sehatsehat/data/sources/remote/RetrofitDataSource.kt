@@ -114,11 +114,28 @@ class RetrofitDataSource(
         return retrofitService.getAllUsers()
     }
 
+    override suspend fun getuserProfile(username: String): UserDRO {
+        return retrofitService.getUserProfile(username)
+    }
+
     override suspend fun deleteUser(username: String) {
         // Panggil endpoint DELETE → Response<Unit>
         val response: Response<Unit> = retrofitService.deleteUser(username)
         if (!response.isSuccessful) {
             throw RuntimeException("Gagal menghapus user username=$username (status code: ${response.code()})")
         }
+    }
+
+    override suspend fun userTopUp(username: String, amount: Int): userTopUpResponse {
+        return retrofitService.userTopUp(username, amount)
+    }
+
+    override suspend fun userUpdateProfile(
+        username: String,
+        display_name: String,
+        password: String,
+        dob: String
+    ): userUpdateProfileResponse {
+        return retrofitService.userUpdateProfile(username, display_name, password, dob)
     }
 }
