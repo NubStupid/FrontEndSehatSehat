@@ -133,7 +133,7 @@ class AdminEditProgramViewModel : ViewModel() {
                             workout_title = title,
                             estimated_time = estimated_time.toIntOrNull() ?: 0,
                             focused_at = focused_at,
-                            program_id = updatedProgram.id
+                            program_id = updatedProgram.id,
                         )
                         SehatApplication.retrofitService.insertWorkout(workout)
                     }

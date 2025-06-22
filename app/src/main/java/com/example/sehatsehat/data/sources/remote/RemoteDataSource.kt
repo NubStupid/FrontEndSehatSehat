@@ -16,6 +16,9 @@ interface RemoteDataSource {
     suspend fun syncUser():UserListDRO
     suspend fun syncProgramProgress():ProgramProgressDRO
     suspend fun syncUserProgram():UserProgramListDRO
+    suspend fun syncWorkout():WorkoutListDRO
+    suspend fun syncMeal():MealListDRO
+
 
     suspend fun getArticles():List<Article>
 
@@ -30,6 +33,7 @@ interface RemoteDataSource {
     suspend fun updateProgram(id: String, program: ProgramEntity): ProgramDRO
     suspend fun deleteProgram(id: String)
     suspend fun getProgramByUser(username: String):List<ProgramEntity>
+    suspend fun incrementProgress(progress_id: String): ProgramProgressSingleDRO
 
     // user
     suspend fun getAllUsers(): UserListDRO

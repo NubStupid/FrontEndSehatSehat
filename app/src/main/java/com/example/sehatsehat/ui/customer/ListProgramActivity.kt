@@ -50,7 +50,7 @@ fun ListProgramScreen(
 ) {
     val programs = listOf(
         FitnessProgram(
-            id = 1,
+            id = "PR0001",
             title = "Slim Fit Project",
             dateRange = "10/02/2026 - 10/03/2026",
             description = "Medium Intensity training with HIIT to burn fat",
@@ -60,7 +60,7 @@ fun ListProgramScreen(
             detailedDescription = "Medium Intensity training with HIIT to burn fat"
         ),
         FitnessProgram(
-            id = 2,
+            id = "PR0002",
             title = "Muscle Building Pro",
             dateRange = "15/02/2026 - 15/04/2026",
             description = "High intensity strength training program",
@@ -70,7 +70,7 @@ fun ListProgramScreen(
             detailedDescription = "High intensity strength training program"
         ),
         FitnessProgram(
-            id = 3,
+            id = "PR00003",
             title = "Cardio Blast",
             dateRange = "01/03/2026 - 30/03/2026",
             description = "Intensive cardiovascular training",

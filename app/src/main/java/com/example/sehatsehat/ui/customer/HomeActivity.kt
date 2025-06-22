@@ -55,7 +55,10 @@ class HomeActivity : ComponentActivity() {
                 HomeScreen(
                     displayName = activeUser.display_name,
                     onNavigateToProgram = { program ->
-                        startActivity(ViewProgramActivity.newIntent(this, program))
+                        val intent = Intent(this,ViewProgramActivity::class.java)
+                        intent.putExtra("program",program)
+                        intent.putExtra("active_user",activeUser)
+                        startActivity(intent)
                     },
                     onNavigateToArticle = { article ->
                         startActivity(ArticleDetailActivity.newIntent(this, article))
@@ -334,12 +337,12 @@ class HomeActivity : ComponentActivity() {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = "By ${article.author}",
+                                    text = "By ${article.author.take(32)}",
                                     color = Color.White.copy(alpha = 0.7f),
                                     fontSize = 10.sp
                                 )
                                 Text(
-                                    text = article.date,
+                                    text = article.date.split("T").get(0),
                                     color = Color.White.copy(alpha = 0.6f),
                                     fontSize = 10.sp
                                 )
@@ -579,7 +582,7 @@ class HomeActivity : ComponentActivity() {
                                 lineHeight = 20.sp
                             )
                             Text(
-                                text = if (program.isPurchased) program.dateRange else "Rp 150.000",
+                                text = if (program.isPurchased) program.dateRange else parseBalanceToIDR(program.price),
                                 color = if (program.isPurchased) Color.White.copy(alpha = 0.9f) else Color.Gray.copy(alpha = 0.7f),
                                 fontSize = 11.sp,
                                 modifier = Modifier.padding(top = 2.dp)
@@ -612,21 +615,6 @@ class HomeActivity : ComponentActivity() {
                                     color = Color(0xFFFFB800),
                                     trackColor = Color.White.copy(alpha = 0.3f),
                                 )
-                            } else {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(
-                                        Icons.Default.Star,
-                                        contentDescription = "Rating",
-                                        tint = Color(0xFFFFB800),
-                                        modifier = Modifier.size(16.dp)
-                                    )
-                                    Text(
-                                        text = "4.8 (1234 users)",
-                                        color = Color.Gray,
-                                        fontSize = 12.sp,
-                                        modifier = Modifier.padding(start = 4.dp)
-                                    )
-                                }
                             }
                         }
                     }

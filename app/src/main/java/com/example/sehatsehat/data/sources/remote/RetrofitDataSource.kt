@@ -46,6 +46,13 @@ class RetrofitDataSource(
         return retrofitService.syncUserProgram()
     }
 
+    override suspend fun syncWorkout(): WorkoutListDRO {
+        return retrofitService.syncWorkout()
+    }
+
+    override suspend fun syncMeal(): MealListDRO {
+        return retrofitService.syncMeal()
+    }
 
     override suspend fun getArticles(): List<Article> {
         val response = retrofitService.getArticles()
@@ -107,6 +114,10 @@ class RetrofitDataSource(
 
     override suspend fun getProgramByUser(username: String): List<ProgramEntity> {
         return retrofitService.getProgramByUser(getUserProgramDTO(username))
+    }
+
+    override suspend fun incrementProgress(progress_id: String): ProgramProgressSingleDRO {
+        return retrofitService.incrementProgress(progress_id)
     }
 
     // user

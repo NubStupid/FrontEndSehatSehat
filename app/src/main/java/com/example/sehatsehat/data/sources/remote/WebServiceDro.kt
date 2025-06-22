@@ -91,6 +91,10 @@ data class ProgramProgressDRO(
     val status: Int,
     val progress:List<ProgramProgressEntity>
 )
+data class ProgramProgressSingleDRO(
+    val status: Int,
+    val progress:ProgramProgressEntity
+)
 
 data class MealListDRO(
     val status: Int,

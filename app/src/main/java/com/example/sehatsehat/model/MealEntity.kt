@@ -1,7 +1,11 @@
 package com.example.sehatsehat.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity("meals")
 data class MealEntity(
-    val id: String,
+    @PrimaryKey val id: String,
     val meal_name: String,
     val ingredients: String,
     val calories: Float,

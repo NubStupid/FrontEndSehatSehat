@@ -156,4 +156,15 @@ interface WebService {
         @Path("password") password: String,
         @Path("dob") dob: String
     ): userUpdateProfileResponse
+
+    @PUT("/api/v1/programs/progress/{progress_id}")
+    suspend fun incrementProgress(
+        @Path("progress_id") progress_id: String
+    ): ProgramProgressSingleDRO
+
+    @POST("/api/v1/workout/sync")
+    suspend fun syncWorkout(): WorkoutListDRO
+
+    @POST("/api/v1/meal/sync")
+    suspend fun syncMeal(): MealListDRO
 }

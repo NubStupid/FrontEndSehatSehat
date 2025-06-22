@@ -3,10 +3,12 @@ package com.example.sehatsehat.data.sources.local
 import android.util.Log
 import com.example.sehatsehat.data.sources.remote.DashboardDRO
 import com.example.sehatsehat.model.ChatLogEntity
+import com.example.sehatsehat.model.MealEntity
 import com.example.sehatsehat.model.ProgramEntity
 import com.example.sehatsehat.model.ProgramProgressEntity
 import com.example.sehatsehat.model.UserEntity
 import com.example.sehatsehat.model.UserPogramEntity
+import com.example.sehatsehat.model.WorkoutEntity
 import java.util.Date
 
 class RoomDataSource(
@@ -46,6 +48,20 @@ class RoomDataSource(
         db.userDao().deleteAll()
         for (user in users){
             db.userDao().insertUser(user)
+        }
+    }
+
+    override suspend fun syncWorkout(workouts: List<WorkoutEntity>) {
+        db.workoutDao().deleteAll()
+        for(w in workouts){
+            db.workoutDao().insert(w)
+        }
+    }
+
+    override suspend fun syncMeal(meals: List<MealEntity>) {
+        db.mealDao().deleteAll()
+        for(m in meals){
+            db.mealDao().insert(m)
         }
     }
 
@@ -199,6 +215,18 @@ class RoomDataSource(
 
     override suspend fun deleteUser(user: UserEntity) {
         return db.userDao().deleteUser(user)
+    }
+
+    override suspend fun getWorkoutById(id: String): WorkoutEntity? {
+        return db.workoutDao().getWorkoutById(id)
+    }
+
+    override suspend fun getMealById(id: String): MealEntity? {
+        return db.mealDao().getMealsById(id)
+    }
+
+    override suspend fun incrementProgress(progress: ProgramProgressEntity) {
+        db.programProgressDao().update(progress)
     }
 
 }

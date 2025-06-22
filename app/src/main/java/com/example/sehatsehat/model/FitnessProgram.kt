@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Entity(tableName = "fitness_programs")
 data class FitnessProgram(
-    val id: Int,
+    val id: String,
     val title: String,
     val dateRange: String,
     val description: String,

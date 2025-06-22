@@ -11,8 +11,12 @@ import com.example.sehatsehat.data.sources.remote.userUpdateProfileResponse
 import com.example.sehatsehat.model.Article
 import com.example.sehatsehat.model.ChatLogEntity
 import com.example.sehatsehat.model.FitnessProgram
+import com.example.sehatsehat.model.MealEntity
 import com.example.sehatsehat.model.ProgramEntity
+import com.example.sehatsehat.model.ProgramProgressEntity
 import com.example.sehatsehat.model.UserEntity
+import com.example.sehatsehat.model.UserPogramEntity
+import com.example.sehatsehat.model.WorkoutEntity
 
 interface SehatRepository{
     suspend fun chatGroupSync(group_id: String)
@@ -20,6 +24,8 @@ interface SehatRepository{
     suspend fun userSync()
     suspend fun programProgressSync()
     suspend fun userProgramSync()
+    suspend fun workoutSync()
+    suspend fun mealSync()
 
     suspend fun getArticles():List<Article>
 
@@ -47,6 +53,8 @@ interface SehatRepository{
     suspend fun getProgramByUser(username: String): List<ProgramEntity>
     suspend fun getAllUserProgramForUI(username: String):List<FitnessProgram>
     suspend fun getAllProgramForPurchase(username:String):List<FitnessProgram>
+    suspend fun getProgramProgressById(id:String):ProgramProgressEntity?
+    suspend fun getUserProgramByProgramId(id:String):UserPogramEntity?
 
     suspend fun getAllUsers(): List<UserEntity>
     suspend fun getUserProfile(username: String): UserDRO
@@ -54,4 +62,8 @@ interface SehatRepository{
 
     suspend fun userTopUp(username: String, amount: Int): userTopUpResponse
     suspend fun userUpdateProfile(username: String, display_name: String, password: String, dob: String): userUpdateProfileResponse
+
+    suspend fun getWorkoutById(id:String):WorkoutEntity?
+    suspend fun getMealById(id: String):MealEntity?
+    suspend fun incrementProgress(progress_id:String)
 }

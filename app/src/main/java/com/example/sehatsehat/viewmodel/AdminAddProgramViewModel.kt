@@ -72,7 +72,8 @@ class AdminAddProgramViewModel : ViewModel() {
                         workout_title = title,
                         estimated_time = estimated_time.toInt(),
                         focused_at = focused_at,
-                        program_id = newProgram.id
+                        program_id = newProgram.id,
+                        expert_username = "Sehat Sehat Instructor"
                     )
                     SehatApplication.retrofitService.insertWorkout(workout)
                 }

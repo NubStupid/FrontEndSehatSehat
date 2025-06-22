@@ -10,6 +10,7 @@ import com.example.sehatsehat.viewmodel.CustomerServiceViewModel
 import com.example.sehatsehat.viewmodel.CustomerTopupViewModel
 import com.example.sehatsehat.viewmodel.HomeViewModel
 import com.example.sehatsehat.viewmodel.ProfileViewModel
+import com.example.sehatsehat.viewmodel.ViewProgramViewModel
 
 val SehatViewModelFactory = object : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T =
@@ -30,6 +31,8 @@ val SehatViewModelFactory = object : ViewModelProvider.Factory {
                     CustomerServiceViewModel(sehatRepository)
                 isAssignableFrom(CustomerTopupViewModel::class.java)->
                     CustomerTopupViewModel(sehatRepository)
+                isAssignableFrom(ViewProgramViewModel::class.java)->
+                    ViewProgramViewModel(sehatRepository)
 
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

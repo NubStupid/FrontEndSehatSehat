@@ -2,10 +2,12 @@ package com.example.sehatsehat.data.sources.local
 
 import com.example.sehatsehat.data.sources.remote.DashboardDRO
 import com.example.sehatsehat.model.ChatLogEntity
+import com.example.sehatsehat.model.MealEntity
 import com.example.sehatsehat.model.ProgramEntity
 import com.example.sehatsehat.model.ProgramProgressEntity
 import com.example.sehatsehat.model.UserEntity
 import com.example.sehatsehat.model.UserPogramEntity
+import com.example.sehatsehat.model.WorkoutEntity
 
 interface LocalDataSource {
 //    suspend fun getAll():List<Todo>
@@ -27,6 +29,8 @@ interface LocalDataSource {
     suspend fun syncUser(users:List<UserEntity>)
     suspend fun syncProgramProgress(progress:List<ProgramProgressEntity>)
     suspend fun syncUserProgram(userPrograms:List<UserPogramEntity>)
+    suspend fun syncWorkout(workouts:List<WorkoutEntity>)
+    suspend fun syncMeal(meals:List<MealEntity>)
 
     suspend fun getDashboard(): DashboardDRO
 
@@ -45,4 +49,9 @@ interface LocalDataSource {
     // user
     suspend fun getAllUsers(): List<UserEntity>
     suspend fun deleteUser(user: UserEntity)
+
+
+    suspend fun getWorkoutById(id:String):WorkoutEntity?
+    suspend fun getMealById(id: String):MealEntity?
+    suspend fun incrementProgress(progress:ProgramProgressEntity)
 }
