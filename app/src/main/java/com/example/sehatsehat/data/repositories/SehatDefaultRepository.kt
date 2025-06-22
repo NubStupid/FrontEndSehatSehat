@@ -277,7 +277,11 @@ class SehatDefaultRepository (
                 if(programProgress != null){
 //                    Log.d("ui","ui")
                     val dateFormat = SimpleDateFormat("dd MM yyyy")
-                    val progress = (programProgress.progress_index / programProgress.progress_list.length).toFloat()
+                    val progress = if (programProgress.progress_list.isNotEmpty()) {
+                        programProgress.progress_index.toFloat() / programProgress.progress_list.length
+                    } else {
+                        0f
+                    }
                     val dateRange = "${dateFormat.format(Date(upEntity.createdAt))} - ${dateFormat.format(Date(upEntity.expires_in))}"
                     val programs_UI = FitnessProgram(up.id,up.program_name,dateRange,"Sehat Sehat's Program named ${up.program_name}","",progress,listOf(0xFF6F46FF, 0xFF9A33FF),true,up.pricing.toInt(), detailedDescription = "Program ${up.program_name} has a detailed program about ${programProgress.progress_list_type} to help achieve your goals")
                     ui_list.add(programs_UI)

@@ -143,12 +143,16 @@ data class TransactionDetails(
     val order_id:String,
     val gross_amount:Int
 )
+
 data class PaymentRequest(
     val transactionDetails: TransactionDetails,
-    val acquirer:String = "gopay"
+    val acquirer: String = "gopay",
+    val userId: String,          // ID user
+    val programPrice: Int      // harga program
 )
 
 data class PaymentResponse(
     val status: Int,
-    val payment_url: String?
+    val payment_url: String?,
+    val newBalance: Int?       // hanya untuk Balance
 )

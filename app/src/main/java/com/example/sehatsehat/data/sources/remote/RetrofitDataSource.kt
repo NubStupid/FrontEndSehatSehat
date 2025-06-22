@@ -64,7 +64,6 @@ class RetrofitDataSource(
             if (articles != null) {
                 articles.map {
                     returned.add(Article(
-                        id = UUID.randomUUID().variant(),
                         author = it.author,
                         title = it.title,
                         description = it.description,

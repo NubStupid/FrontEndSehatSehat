@@ -21,7 +21,7 @@ import com.example.sehatsehat.model.UserEntity
 import com.example.sehatsehat.model.UserPogramEntity
 import com.example.sehatsehat.model.WorkoutEntity
 
-@Database(entities = [ChatLogEntity::class, UserEntity::class, ProgramEntity::class,ProgramProgressEntity::class,UserPogramEntity::class,WorkoutEntity::class,MealEntity::class,PaymentURL::class], version = 3)
+@Database(entities = [ChatLogEntity::class, UserEntity::class, ProgramEntity::class,ProgramProgressEntity::class,UserPogramEntity::class,WorkoutEntity::class,MealEntity::class,PaymentURL::class], version = 4)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun chatLogDao(): ChatLogDao
     abstract fun programDao(): ProgramDao

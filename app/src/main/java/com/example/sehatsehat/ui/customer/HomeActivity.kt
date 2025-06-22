@@ -1,11 +1,13 @@
 package com.example.sehatsehat.ui.customer
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -45,30 +48,58 @@ import java.util.Locale
 
 class HomeActivity : ComponentActivity() {
     val vm by viewModels<HomeViewModel> { SehatViewModelFactory }
+
+    // Launcher untuk PaymentActivity
+    private val paymentLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val newBal = result.data?.getIntExtra("new_balance", vm.activeUser.value?.balance ?: 0)
+            newBal?.let { vm.updateBalance(it) }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val activeUser = intent.getParcelableExtra<UserEntity>("active_user")?: UserEntity("","","","","","",0,"","")
+
+        val activeUser = intent.getParcelableExtra<UserEntity>("active_user")
+            ?: return finish()
         vm.init(activeUser)
+
         setContent {
             SehatSehatTheme {
                 HomeScreen(
-                    displayName = activeUser.display_name,
+                    viewModel = vm,
                     onNavigateToProgram = { program ->
-                        val intent = Intent(this,ViewProgramActivity::class.java)
-                        intent.putExtra("program",program)
-                        intent.putExtra("active_user",activeUser)
-                        startActivity(intent)
+                        Intent(this, PaymentActivity::class.java).also {
+                            it.putExtra("program", program)
+                            it.putExtra("active_user", vm.activeUser.value)
+                            paymentLauncher.launch(it)
+                        }
+                    },
+                    onNavigateToPurchasedProgram = { program ->
+                        Intent(this, ViewProgramActivity::class.java).also {
+                            it.putExtra("program", program)
+                            it.putExtra("active_user", vm.activeUser.value)
+                            startActivity(it)
+                        }
                     },
                     onNavigateToArticle = { article ->
-                        startActivity(ArticleDetailActivity.newIntent(this, article))
+                        Intent(this, ViewArticleActivity::class.java).also {
+                            it.putExtra("title", article.title)
+                            it.putExtra("description", article.description)
+                            it.putExtra("content", article.content)
+                            it.putExtra("date", article.date)
+                            it.putExtra("author", article.author)
+                            startActivity(it)
+                        }
                     },
                     onNavigateToProfile = {
-                        val intent = Intent(this, ProfileActivity::class.java)
-                        intent.putExtra("display_name", activeUser.display_name)
-                        intent.putExtra("active_user", activeUser)
-                        intent.putExtra("username", activeUser.username)
-                        startActivity(intent)
+                        Intent(this, ProfileActivity::class.java).also {
+                            it.putExtra("active_user", vm.activeUser.value)
+                            startActivity(it)
+                        }
                     }
                 )
             }
@@ -92,11 +123,20 @@ class HomeActivity : ComponentActivity() {
 
     @Composable
     fun HomeScreen(
-        displayName: String,
+        viewModel: HomeViewModel,
         onNavigateToProgram: (FitnessProgram) -> Unit,
+        onNavigateToPurchasedProgram: (FitnessProgram) -> Unit,
         onNavigateToArticle: (Article) -> Unit,
         onNavigateToProfile: () -> Unit
     ) {
+        val user by viewModel.activeUser.observeAsState()
+        val featured by viewModel.featuredArticles.observeAsState(emptyList())
+        val regular by viewModel.regularArticles.observeAsState(emptyList())
+        val purchased by viewModel.purchasedPrograms.observeAsState(emptyList())
+        val available by viewModel.programAvailable.observeAsState(emptyList())
+
+        val context = LocalContext.current
+
         var selectedTab by remember { mutableStateOf(0) }
         val tabs = listOf("Articles", "Program")
 
@@ -212,8 +252,13 @@ class HomeActivity : ComponentActivity() {
 
                     // Content based on selected tab
                     when (selectedTab) {
-                        0 -> ArticlesContent(onNavigateToArticle = onNavigateToArticle)
-                        1 -> ProgramContent(onNavigateToProgram = onNavigateToProgram)
+                        0 -> ArticlesContent(vm = viewModel) { article ->
+                            navigateToArticle(context, article)
+                        }
+                        1 -> ProgramContent(
+                            onNavigateToProgram = onNavigateToProgram,
+                            onNavigateToPurchasedProgram = onNavigateToPurchasedProgram
+                        )
                     }
                 }
             }
@@ -221,11 +266,15 @@ class HomeActivity : ComponentActivity() {
     }
 
     @Composable
-    fun ArticlesContent(onNavigateToArticle: (Article) -> Unit) {
-        val featuredArticlesObs:State<List<Article>?> = vm.featuredArticles.observeAsState()
+    fun ArticlesContent(vm: HomeViewModel, onNavigateToArticle: (Article) -> Unit) {
+        LaunchedEffect(Unit) {
+            vm.fetchArticles()
+        }
+
+        val featuredArticlesObs: State<List<Article>?> = vm.featuredArticles.observeAsState()
         val featuredArticles = featuredArticlesObs.value
 
-        val regularArticlesObs:State<List<Article>?> = vm.regularArticles.observeAsState()
+        val regularArticlesObs: State<List<Article>?> = vm.regularArticles.observeAsState()
         val regularArticles = regularArticlesObs.value
 
         Column(
@@ -437,107 +486,79 @@ class HomeActivity : ComponentActivity() {
         }
     }
 
+    fun navigateToArticle(context: Context, article: Article) {
+        val intent = Intent(context, ViewArticleActivity::class.java).apply {
+            putExtra("title", article.title)
+            putExtra("description", article.description)
+            putExtra("content", article.content)
+            putExtra("author", article.author)
+            putExtra("date", article.date)
+        }
+        context.startActivity(intent)
+    }
+
     @Composable
-    fun ProgramContent(onNavigateToProgram: (FitnessProgram) -> Unit) {
+    fun ProgramContent(
+        onNavigateToProgram: (FitnessProgram) -> Unit,
+        onNavigateToPurchasedProgram: (FitnessProgram) -> Unit
+    ) {
         val purchasedObs:State<List<FitnessProgram>?> = vm.purchasedPrograms.observeAsState()
         val purchasedPrograms = purchasedObs.value
         val availableObs:State<List<FitnessProgram>?> = vm.programAvailable.observeAsState()
         val availablePrograms = availableObs.value
-
-//        val programs = listOf(
-//            FitnessProgram(
-//                id = 1,
-//                title = "Slim Fit Project",
-//                dateRange = "10/02/2026 - 10/03/2026",
-//                description = "Medium",
-//                duration = "15 Hours 30 Minutes",
-//                progress = 0.7f,
-//                backgroundGradient = listOf(0xFF6B46C1, 0xFF9333EA),
-//                isPurchased = true,
-//                detailedDescription = "DWNDQJDNQWDQWD"
-//            ),
-//            FitnessProgram(
-//                id = 2,
-//                title = "Muscle Building Pro",
-//                dateRange = "15/02/2026 - 15/04/2026",
-//                description = "High intensity strength training program",
-//                duration = "25 Hours 45 Minutes",
-//                progress = 0.0f,
-//                backgroundGradient = listOf(0xFF059669, 0xFF10B981),
-//                isPurchased = false,
-//                detailedDescription = "High intensity strength training program"
-//            )
-//        )
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         ) {
-//            Text(
-//                text = "Available Programs",
-//                fontSize = 18.sp,
-//                fontWeight = FontWeight.Bold,
-//                modifier = Modifier.padding(bottom = 8.dp)
-//            )
-//
-//            // Using Column instead of LazyColumn for programs
-//            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-//                programs.forEach { program ->
-//                    ProgramCard(
-//                        program = program,
-//                        onClick = { onNavigateToProgram(program) }
-//                    )
-//                }
-//            }
             Text(
                 text = "Purchased Programs",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp) // Keep this padding for the title
+                modifier = Modifier.padding(bottom = 8.dp)
             )
 
             LazyColumn(
                 modifier = Modifier
-                    .weight(1f, fill = false) // Takes available space, shrinks if content is smaller
+                    .weight(1f, fill = false)
                     .fillMaxWidth()
-                    .background(Color.LightGray.copy(alpha = 0.3f)), // Just for visualization
+                    .background(Color.LightGray.copy(alpha = 0.3f)),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(
                     items = purchasedPrograms.orEmpty(),
-                    key = { program -> program.id } // Optional: Provide a stable key for better performance
+                    key = { program -> program.id }
                 ) { program ->
                     ProgramCard(
                         program = program,
-                        onClick = { onNavigateToProgram(program) }
+                        onClick = { onNavigateToPurchasedProgram(program) } // Use different callback for purchased programs
                     )
-
                 }
             }
+
             Text(
                 text = "Available Programs",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp) // Keep this padding for the title
+                modifier = Modifier.padding(bottom = 8.dp)
             )
 
             LazyColumn(
                 modifier = Modifier
-                    .weight(1f, fill = false) // Takes available space, shrinks if content is smaller
+                    .weight(1f, fill = false)
                     .fillMaxWidth()
-                    .background(Color.LightGray.copy(alpha = 0.3f)), // Just for visualization
+                    .background(Color.LightGray.copy(alpha = 0.3f)),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(
                     items = availablePrograms.orEmpty(),
-                    key = { program -> program.id } // Optional: Provide a stable key for better performance
+                    key = { program -> program.id }
                 ) { program ->
                     ProgramCard(
                         program = program,
-                        onClick = { onNavigateToProgram(program) }
+                        onClick = { onNavigateToProgram(program) } // Use payment callback for available programs
                     )
-
                 }
             }
         }
@@ -639,5 +660,4 @@ class HomeActivity : ComponentActivity() {
             }
         }
     }
-
 }

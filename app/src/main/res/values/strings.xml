@@ -18,4 +18,5 @@
     <string name="title_activity_customer_update_profile_view_model">
         CustomerUpdateProfileViewModel
     </string>
+    <string name="title_activity_view_article">ViewArticleActivity</string>
 </resources>

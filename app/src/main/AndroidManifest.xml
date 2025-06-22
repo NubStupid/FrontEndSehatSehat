@@ -24,6 +24,11 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.customer.ViewArticleActivity"
+            android:exported="false"
+            android:label="@string/title_activity_view_article"
+            android:theme="@style/Theme.SehatSehat" />
+        <activity
             android:name=".viewmodel.CustomerUpdateProfileViewModel"
             android:exported="false"
             android:label="@string/title_activity_customer_update_profile_view_model"

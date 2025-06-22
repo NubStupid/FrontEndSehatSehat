@@ -18,42 +18,28 @@ import retrofit2.Response
 class PaymentActivityViewModel (
     private val sehatRepository: SehatRepository
 ):ViewModel(){
+    // LiveData untuk paymentUrl & newBalance
+    private val _paymentUrl = MutableLiveData<String?>()
+    val paymentUrl: LiveData<String?> = _paymentUrl
 
-    private val _paymentUrl = MutableLiveData<String>()
-    val paymentUrl:LiveData<String>
-        get() = _paymentUrl
+    private val _newBalance = MutableLiveData<Int>()
+    val newBalance: LiveData<Int> = _newBalance
 
-    fun createPaymentTransaction(programId: String) {
-        viewModelScope.launch {
-            val transactionDetails = TransactionDetails(programId,1)
-            val paymentRequest = PaymentRequest(transactionDetails)
-            val url = sehatRepository.createPaymentTransaction(paymentRequest).payment_url
-            if(url != null){
-                _paymentUrl.value = url.toString()
-                val u = sehatRepository.getUrl()
-                if(u != null){
-                    sehatRepository.deleteUrl()
-                }
-                sehatRepository.insertUrl(url)
-            }
+    suspend fun pay(programId: String, userId: String, price: Int, viaMidtrans: Boolean) {
+        val req = PaymentRequest(
+            transactionDetails = TransactionDetails(order_id = programId.toString(), gross_amount = price),
+            acquirer = if (viaMidtrans) "gopay" else "Balance",
+            userId = userId,
+            programPrice = price
+        )
+        val resp = sehatRepository.createPaymentTransaction(req)
+        if (!viaMidtrans) {
+            // langsung Balance
+            _newBalance.postValue(resp.newBalance ?: 0)
+            _paymentUrl.postValue(null)
+        } else {
+            // Midtrans QR
+            _paymentUrl.postValue(resp.payment_url)
         }
     }
-
-    fun fetchURL(b:Boolean,programId:String){
-        viewModelScope.launch {
-            if(b){
-                val u = sehatRepository.getUrl()
-                if(u == null){
-                    createPaymentTransaction(programId)
-                }else{
-                    _paymentUrl.value = u!!
-                }
-            }else{
-                _paymentUrl.value = ""
-            }
-        }
-    }
-
-
-
 }
