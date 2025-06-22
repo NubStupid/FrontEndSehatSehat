@@ -173,4 +173,7 @@ interface WebService {
 
     @POST("/api/v1/meal/sync")
     suspend fun syncMeal(): MealListDRO
+
+    @POST("/api/v1/transaction")
+    suspend fun createPaymentTransaction(@Body request: PaymentRequest): PaymentResponse
 }

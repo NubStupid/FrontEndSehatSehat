@@ -138,3 +138,17 @@ data class userUpdateProfileResponse(
     val message: String,
     val success: Boolean
 )
+
+data class TransactionDetails(
+    val order_id:String,
+    val gross_amount:Int
+)
+data class PaymentRequest(
+    val transactionDetails: TransactionDetails,
+    val acquirer:String = "gopay"
+)
+
+data class PaymentResponse(
+    val status: Int,
+    val payment_url: String?
+)

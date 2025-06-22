@@ -56,7 +56,10 @@ class ViewProgramActivity : ComponentActivity() {
                     program = program,
                     onBackClick = { finish() },
                     onPurchaseClick = { selectedProgram ->
-                        startActivity(PaymentActivity.newIntent(this, selectedProgram))
+                        val intent = Intent(this,PaymentActivity::class.java)
+                        intent.putExtra("program",program)
+                        intent.putExtra("active_user",activeUser)
+                        startActivity(intent)
                     }
                 )
             }
@@ -134,6 +137,8 @@ class ViewProgramActivity : ComponentActivity() {
                             }
                         }
                     }else{
+                        val completedObs = vm.isCompleted.observeAsState()
+                        val completed = completedObs.value
                         Surface(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -141,24 +146,26 @@ class ViewProgramActivity : ComponentActivity() {
                             shadowElevation = 8.dp,
                             shape = RoundedCornerShape(12.dp)
                         ) {
-                            Button(
-                                onClick = {
-                                    Log.d("masuk","masuk")
-                                    if(ui != null && user_ != null && progress != null){
-                                        vm.nextProgress(progress.id,ui,user_)
-                                    }
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(50.dp),
-                                shape = RoundedCornerShape(12.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6B46C1).copy(0.7f))
-                            ) {
-                                Text(
-                                    text = "Complete current progress!",
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
+                            if(completed == false){
+                                Button(
+                                    onClick = {
+                                        Log.d("masuk","masuk")
+                                        if(ui != null && user_ != null && progress != null){
+                                            vm.nextProgress(progress.id,ui,user_)
+                                        }
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(50.dp),
+                                    shape = RoundedCornerShape(12.dp),
+                                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6B46C1).copy(0.7f))
+                                ) {
+                                    Text(
+                                        text = "Complete current progress!",
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
                             }
                         }
                     }

@@ -9,6 +9,8 @@ import com.example.sehatsehat.data.sources.remote.ChatLogDTO
 import com.example.sehatsehat.data.sources.remote.DashboardDRO
 import com.example.sehatsehat.data.sources.remote.LoginDRO
 import com.example.sehatsehat.data.sources.remote.LoginDTO
+import com.example.sehatsehat.data.sources.remote.PaymentRequest
+import com.example.sehatsehat.data.sources.remote.PaymentResponse
 import com.example.sehatsehat.data.sources.remote.ProgramDRO
 import com.example.sehatsehat.data.sources.remote.ProgramListDRO
 import com.example.sehatsehat.data.sources.remote.RegisterDRO
@@ -28,6 +30,7 @@ import com.example.sehatsehat.model.UserEntity
 import com.example.sehatsehat.model.UserPogramEntity
 import com.example.sehatsehat.model.WorkoutEntity
 import com.example.sehatsehat.ui.customer.ProfileActivity
+import retrofit2.Call
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -319,6 +322,22 @@ class SehatDefaultRepository (
     override suspend fun incrementProgress(progress_id: String) {
         val progress = remoteDataSource.incrementProgress(progress_id)
         localDataSource.incrementProgress(progress.progress)
+    }
+
+    override suspend fun createPaymentTransaction(request: PaymentRequest): PaymentResponse {
+        return remoteDataSource.createPaymentTransaction(request)
+    }
+
+    override suspend fun insertUrl(url: String) {
+        return localDataSource.insertUrl(url)
+    }
+
+    override suspend fun deleteUrl() {
+        return localDataSource.deleteUrl()
+    }
+
+    override suspend fun getUrl(): String? {
+        return localDataSource.getUrl()
     }
 
     override suspend fun getReportByRange(start: String, end: String): Response<List<ReportItem>> {

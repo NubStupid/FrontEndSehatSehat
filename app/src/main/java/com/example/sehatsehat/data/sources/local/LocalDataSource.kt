@@ -54,4 +54,8 @@ interface LocalDataSource {
     suspend fun getWorkoutById(id:String):WorkoutEntity?
     suspend fun getMealById(id: String):MealEntity?
     suspend fun incrementProgress(progress:ProgramProgressEntity)
+
+    suspend fun insertUrl(url:String)
+    suspend fun deleteUrl()
+    suspend fun getUrl():String?
 }

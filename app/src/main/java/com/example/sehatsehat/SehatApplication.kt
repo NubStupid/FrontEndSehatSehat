@@ -8,6 +8,7 @@ import com.example.sehatsehat.data.sources.local.RoomDataSource
 import com.example.sehatsehat.data.sources.remote.RetrofitDataSource
 import com.example.sehatsehat.data.sources.remote.WebService
 import com.example.sehatsehat.network.TimestampTypeAdapter
+//import com.midtrans.sdk.uikit.SdkUIFlowBuilder
 //import com.google.gson.GsonBuilder
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -40,7 +41,8 @@ class SehatApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        baseContext.deleteDatabase("mdp_sehat")
+
+//        baseContext.deleteDatabase("mdp_sehat")
 
         db =AppDatabase.getInstance(baseContext)
         sehatRepository = SehatDefaultRepository(

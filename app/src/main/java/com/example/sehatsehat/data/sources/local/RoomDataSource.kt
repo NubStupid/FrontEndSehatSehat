@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.sehatsehat.data.sources.remote.DashboardDRO
 import com.example.sehatsehat.model.ChatLogEntity
 import com.example.sehatsehat.model.MealEntity
+import com.example.sehatsehat.model.PaymentURL
 import com.example.sehatsehat.model.ProgramEntity
 import com.example.sehatsehat.model.ProgramProgressEntity
 import com.example.sehatsehat.model.UserEntity
@@ -227,6 +228,18 @@ class RoomDataSource(
 
     override suspend fun incrementProgress(progress: ProgramProgressEntity) {
         db.programProgressDao().update(progress)
+    }
+
+    override suspend fun insertUrl(url: String) {
+        return db.paymentURLDao().insert(PaymentURL(1,url))
+    }
+
+    override suspend fun deleteUrl() {
+        return db.paymentURLDao().deleteAll()
+    }
+
+    override suspend fun getUrl(): String? {
+        return db.paymentURLDao().getURL()?.url
     }
 
 }

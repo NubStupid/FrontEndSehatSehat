@@ -6,6 +6,7 @@ import com.example.sehatsehat.model.ProgramEntity
 import com.example.sehatsehat.model.ReportItem
 import com.example.sehatsehat.model.UserPogramEntity
 import retrofit2.Response
+import retrofit2.Call
 
 interface RemoteDataSource {
     suspend fun chatToChatbot(message:ChatBotDTO):ChatBotMessage
@@ -20,6 +21,7 @@ interface RemoteDataSource {
     suspend fun syncUserProgram():UserProgramListDRO
     suspend fun syncWorkout():WorkoutListDRO
     suspend fun syncMeal():MealListDRO
+
 
     suspend fun getArticles():List<Article>
 
@@ -45,4 +47,6 @@ interface RemoteDataSource {
 
     // report
     suspend fun getReportByRange(start: String, end: String): Response<List<ReportItem>>
+
+    suspend fun createPaymentTransaction(request: PaymentRequest): PaymentResponse
 }

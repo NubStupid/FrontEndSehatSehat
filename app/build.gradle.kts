@@ -115,5 +115,6 @@ dependencies {
 
     // Compose integration untuk ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
-    
+//    implementation("com.midtrans:uikit:2.0.0-SANDBOX")
+    implementation("io.coil-kt:coil-compose:2.0.0")
 }

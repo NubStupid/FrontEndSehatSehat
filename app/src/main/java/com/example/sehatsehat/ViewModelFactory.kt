@@ -9,6 +9,7 @@ import com.example.sehatsehat.viewmodel.ChatbotViewModel
 import com.example.sehatsehat.viewmodel.CustomerServiceViewModel
 import com.example.sehatsehat.viewmodel.CustomerTopupViewModel
 import com.example.sehatsehat.viewmodel.HomeViewModel
+import com.example.sehatsehat.viewmodel.PaymentActivityViewModel
 import com.example.sehatsehat.viewmodel.ProfileViewModel
 import com.example.sehatsehat.viewmodel.ViewProgramViewModel
 
@@ -33,6 +34,8 @@ val SehatViewModelFactory = object : ViewModelProvider.Factory {
                     CustomerTopupViewModel(sehatRepository)
                 isAssignableFrom(ViewProgramViewModel::class.java)->
                     ViewProgramViewModel(sehatRepository)
+                isAssignableFrom(PaymentActivityViewModel::class.java)->
+                    PaymentActivityViewModel(sehatRepository)
 
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")

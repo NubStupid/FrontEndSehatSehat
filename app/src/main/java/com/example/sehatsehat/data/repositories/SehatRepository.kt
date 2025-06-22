@@ -3,6 +3,8 @@ package com.example.sehatsehat.data.repositories
 import com.example.sehatsehat.data.sources.remote.DashboardDRO
 import com.example.sehatsehat.data.sources.remote.LoginDRO
 import com.example.sehatsehat.data.sources.remote.LoginDTO
+import com.example.sehatsehat.data.sources.remote.PaymentRequest
+import com.example.sehatsehat.data.sources.remote.PaymentResponse
 import com.example.sehatsehat.data.sources.remote.RegisterDRO
 import com.example.sehatsehat.data.sources.remote.UserDRO
 import com.example.sehatsehat.data.sources.remote.UserDTO
@@ -19,6 +21,7 @@ import com.example.sehatsehat.model.UserEntity
 import com.example.sehatsehat.model.UserPogramEntity
 import com.example.sehatsehat.model.WorkoutEntity
 import retrofit2.Response
+import retrofit2.Call
 
 interface SehatRepository{
     suspend fun chatGroupSync(group_id: String)
@@ -68,6 +71,12 @@ interface SehatRepository{
     suspend fun getWorkoutById(id:String):WorkoutEntity?
     suspend fun getMealById(id: String):MealEntity?
     suspend fun incrementProgress(progress_id:String)
+
+    suspend fun createPaymentTransaction(request: PaymentRequest): PaymentResponse
+
+    suspend fun insertUrl(url:String)
+    suspend fun deleteUrl()
+    suspend fun getUrl():String?
 
     suspend fun getReportByRange(start: String, end: String): Response<List<ReportItem>>
 }
