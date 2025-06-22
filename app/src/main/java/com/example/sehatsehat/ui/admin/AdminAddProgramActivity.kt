@@ -92,7 +92,7 @@ fun AdminAddProgramScreen(
                 OutlinedTextField(
                     value = pricing,
                     onValueChange = vm::onPricingChange,
-                    label = { Text("Harga") },
+                    label = { Text("Harga (dalam Rupiah)") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -116,7 +116,7 @@ fun AdminAddProgramScreen(
                 OutlinedTextField(
                     value = estimated_time,
                     onValueChange = { estimated_time = it },
-                    label = { Text("Waktu") },
+                    label = { Text("Waktu (dalam menit)") },
                     singleLine = false,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -124,7 +124,7 @@ fun AdminAddProgramScreen(
                 OutlinedTextField(
                     value = focused_at,
                     onValueChange = { focused_at = it },
-                    label = { Text("Fokus") },
+                    label = { Text("Fokus/Instruksi (dipisahkan koma)") },
                     singleLine = false,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -140,7 +140,7 @@ fun AdminAddProgramScreen(
                 OutlinedTextField(
                     value = ingredients,
                     onValueChange = { ingredients = it },
-                    label = { Text("Bahan Meal") },
+                    label = { Text("Bahan Meal (dipisahkan koma)") },
                     singleLine = false,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -148,7 +148,7 @@ fun AdminAddProgramScreen(
                 OutlinedTextField(
                     value = calories,
                     onValueChange = { calories = it },
-                    label = { Text("Kalori") },
+                    label = { Text("Kalori (dalam kal)") },
                     singleLine = false,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -156,7 +156,7 @@ fun AdminAddProgramScreen(
                 OutlinedTextField(
                     value = fat,
                     onValueChange = { fat = it },
-                    label = { Text("Fat") },
+                    label = { Text("Fat (dalam gram)") },
                     singleLine = false,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -164,7 +164,7 @@ fun AdminAddProgramScreen(
                 OutlinedTextField(
                     value = protein,
                     onValueChange = { protein = it },
-                    label = { Text("Protein") },
+                    label = { Text("Protein (dalam gram)") },
                     singleLine = false,
                     modifier = Modifier.fillMaxWidth()
                 )

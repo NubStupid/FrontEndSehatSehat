@@ -32,7 +32,8 @@ class CustomerTopupActivity : ComponentActivity() {
             SehatSehatTheme {
                 CustomerTopupScreen(
                     username = username,
-                    viewModel = vm
+                    viewModel = vm,
+                    onBack = { finish() }
                 )
             }
         }
@@ -43,7 +44,8 @@ class CustomerTopupActivity : ComponentActivity() {
 @Composable
 fun CustomerTopupScreen(
     username: String,
-    viewModel: CustomerTopupViewModel
+    viewModel: CustomerTopupViewModel,
+    onBack: () -> Unit
 ) {
     // Observe LiveData from ViewModel
     val isLoading by viewModel.isLoading.observeAsState(false)
@@ -58,7 +60,7 @@ fun CustomerTopupScreen(
             TopAppBar(
                 title = { Text("Top Up Saldo") },
                 navigationIcon = {
-                    IconButton(onClick = { /* handle back */ }) {
+                    IconButton(onClick = onBack) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 }

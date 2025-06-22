@@ -138,6 +138,12 @@ interface WebService {
     @GET("/api/v1/reports/monthly-purchases")
     suspend fun getMonthlyReport(): Response<List<ReportItem>>
 
+    @GET("/api/v1/reports/{start}/{end}")
+    suspend fun getReportByRange(
+        @Path("start") start: String,
+        @Path("end") end: String
+    ): Response<List<ReportItem>>
+
     @PUT("/api/v1/users/{username}/topup/{amount}")
     suspend fun userTopUp(
         @Path("username") username: String,

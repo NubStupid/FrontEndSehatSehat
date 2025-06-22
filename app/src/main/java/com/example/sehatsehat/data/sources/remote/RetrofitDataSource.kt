@@ -3,6 +3,7 @@ package com.example.sehatsehat.data.sources.remote
 import com.example.sehatsehat.model.Article
 import com.example.sehatsehat.model.ChatLogEntity
 import com.example.sehatsehat.model.ProgramEntity
+import com.example.sehatsehat.model.ReportItem
 import retrofit2.Response
 import java.util.UUID
 
@@ -16,7 +17,6 @@ class RetrofitDataSource(
     override suspend fun chatToCustomerService(message: ChatBotDTO): ChatBotMessage {
         return retrofitService.chatToCustomerService(message)
     }
-
 
     override suspend fun insertChatLog(chatlog: ChatLogDTO): ChatLogDRO {
         return retrofitService.addChatLog(chatlog)
@@ -87,8 +87,6 @@ class RetrofitDataSource(
         return retrofitService.login(credentials)
     }
 
-
-
     // ======================================
     // 3) Program CRUD
     // ======================================
@@ -148,5 +146,9 @@ class RetrofitDataSource(
         dob: String
     ): userUpdateProfileResponse {
         return retrofitService.userUpdateProfile(username, display_name, password, dob)
+    }
+
+    override suspend fun getReportByRange(start: String, end: String): Response<List<ReportItem>> {
+        return retrofitService.getReportByRange(start, end)
     }
 }

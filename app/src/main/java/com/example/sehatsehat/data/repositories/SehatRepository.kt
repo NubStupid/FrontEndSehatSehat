@@ -14,9 +14,11 @@ import com.example.sehatsehat.model.FitnessProgram
 import com.example.sehatsehat.model.MealEntity
 import com.example.sehatsehat.model.ProgramEntity
 import com.example.sehatsehat.model.ProgramProgressEntity
+import com.example.sehatsehat.model.ReportItem
 import com.example.sehatsehat.model.UserEntity
 import com.example.sehatsehat.model.UserPogramEntity
 import com.example.sehatsehat.model.WorkoutEntity
+import retrofit2.Response
 
 interface SehatRepository{
     suspend fun chatGroupSync(group_id: String)
@@ -66,4 +68,6 @@ interface SehatRepository{
     suspend fun getWorkoutById(id:String):WorkoutEntity?
     suspend fun getMealById(id: String):MealEntity?
     suspend fun incrementProgress(progress_id:String)
+
+    suspend fun getReportByRange(start: String, end: String): Response<List<ReportItem>>
 }

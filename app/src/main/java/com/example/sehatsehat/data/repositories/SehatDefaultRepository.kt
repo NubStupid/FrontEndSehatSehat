@@ -23,10 +23,12 @@ import com.example.sehatsehat.model.FitnessProgram
 import com.example.sehatsehat.model.MealEntity
 import com.example.sehatsehat.model.ProgramEntity
 import com.example.sehatsehat.model.ProgramProgressEntity
+import com.example.sehatsehat.model.ReportItem
 import com.example.sehatsehat.model.UserEntity
 import com.example.sehatsehat.model.UserPogramEntity
 import com.example.sehatsehat.model.WorkoutEntity
 import com.example.sehatsehat.ui.customer.ProfileActivity
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.UUID
@@ -317,5 +319,9 @@ class SehatDefaultRepository (
     override suspend fun incrementProgress(progress_id: String) {
         val progress = remoteDataSource.incrementProgress(progress_id)
         localDataSource.incrementProgress(progress.progress)
+    }
+
+    override suspend fun getReportByRange(start: String, end: String): Response<List<ReportItem>> {
+        return remoteDataSource.getReportByRange(start, end)
     }
 }

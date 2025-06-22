@@ -3,7 +3,9 @@ package com.example.sehatsehat.data.sources.remote
 import com.example.sehatsehat.model.Article
 import com.example.sehatsehat.model.ChatLogEntity
 import com.example.sehatsehat.model.ProgramEntity
+import com.example.sehatsehat.model.ReportItem
 import com.example.sehatsehat.model.UserPogramEntity
+import retrofit2.Response
 
 interface RemoteDataSource {
     suspend fun chatToChatbot(message:ChatBotDTO):ChatBotMessage
@@ -18,7 +20,6 @@ interface RemoteDataSource {
     suspend fun syncUserProgram():UserProgramListDRO
     suspend fun syncWorkout():WorkoutListDRO
     suspend fun syncMeal():MealListDRO
-
 
     suspend fun getArticles():List<Article>
 
@@ -41,4 +42,7 @@ interface RemoteDataSource {
     suspend fun deleteUser(username: String)
     suspend fun userTopUp(username: String, amount: Int): userTopUpResponse
     suspend fun userUpdateProfile(username: String, display_name: String, password: String, dob: String): userUpdateProfileResponse
+
+    // report
+    suspend fun getReportByRange(start: String, end: String): Response<List<ReportItem>>
 }

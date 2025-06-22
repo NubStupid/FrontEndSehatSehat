@@ -240,7 +240,7 @@ fun ProgramCard(
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                     )
                     Text(
-                        "Dibuat: ${program.createdAt}",
+                        "Dibuat: ${program.createdAt.substring(0, 10)}",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                     )
