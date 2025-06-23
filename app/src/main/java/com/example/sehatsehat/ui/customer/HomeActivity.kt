@@ -140,6 +140,10 @@ class HomeActivity : ComponentActivity() {
         var selectedTab by remember { mutableStateOf(0) }
         val tabs = listOf("Articles", "Program")
 
+        LaunchedEffect(Unit) {
+            viewModel.refreshUserData()
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()

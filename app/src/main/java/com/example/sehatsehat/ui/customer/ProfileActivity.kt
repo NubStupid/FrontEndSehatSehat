@@ -72,7 +72,11 @@ class ProfileActivity : ComponentActivity() {
                             startActivity(intent)
                         },
                         onTopUp = {
-
+                            startActivity(
+                                Intent(this, CustomerTopupActivity::class.java).apply {
+                                    putExtra(CustomerTopupActivity.EXTRA_USERNAME, activeUser.username)
+                                }
+                            )
                         }
                     )
                 }
@@ -202,12 +206,7 @@ class ProfileActivity : ComponentActivity() {
                         ProfileOptionItem(
                             icon = Icons.Default.Person,
                             text = "Top Up",
-                            onClick = {
-                                val intent = Intent(this@ProfileActivity, CustomerTopupActivity::class.java).apply {
-                                    putExtra("USERNAME", username)
-                                }
-                                startActivity(intent)
-                            }
+                            onClick = onTopUp
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))

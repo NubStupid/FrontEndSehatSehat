@@ -1,6 +1,7 @@
 package com.example.sehatsehat.ui.customer
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -27,7 +28,8 @@ class CustomerTopupActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val username = intent.getStringExtra("USERNAME") ?: ""
+        val username = intent.getStringExtra(EXTRA_USERNAME).orEmpty()
+        Log.e("username", username)
         setContent {
             SehatSehatTheme {
                 CustomerTopupScreen(
@@ -37,6 +39,10 @@ class CustomerTopupActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+    companion object {
+        const val EXTRA_USERNAME = "extra_username"
     }
 }
 

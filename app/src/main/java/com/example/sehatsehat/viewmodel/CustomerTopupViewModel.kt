@@ -47,6 +47,7 @@ class CustomerTopupViewModel(
             _errorMessage.value = null
 
             try {
+                Log.e("username dan amount", "${username} dan ${amount}")
                 val response = sehatRepository.userTopUp(username, amount)
                 if (response.success) {
                     _successMessage.value = response.message
